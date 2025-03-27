@@ -1,7 +1,7 @@
 package com.example.emotionbot.db.member.entity;
 
-import com.example.emotionbot.enums.ChatMode;
-import com.example.emotionbot.enums.KeyboardYn;
+import com.example.emotionbot.enums.chat.ChatMode;
+import com.example.emotionbot.enums.keyboard.KeyboardYn;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

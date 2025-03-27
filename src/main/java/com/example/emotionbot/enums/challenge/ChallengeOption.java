@@ -1,4 +1,4 @@
-package com.example.emotionbot.enums;
+package com.example.emotionbot.enums.challenge;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
