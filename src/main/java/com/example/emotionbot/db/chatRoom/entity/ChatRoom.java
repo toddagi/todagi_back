@@ -1,4 +1,4 @@
-package com.example.emotionbot.db.monthSummary.entity;
+package com.example.emotionbot.db.chatRoom.entity;
 
 import com.example.emotionbot.db.member.entity.Member;
 import jakarta.persistence.*;
@@ -7,13 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.YearMonth;
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "month_summary")
-public class MonthSummary {
+@Table(name = "chat_room")
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "bigint(20)", nullable = false)
@@ -23,17 +21,9 @@ public class MonthSummary {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(name = "date", columnDefinition = "timestamp", nullable = false)
-    private YearMonth date;
-
-    @Column(name = "summary", columnDefinition = "varchar(100)", nullable = true)
-    private String summary;
-
     @Builder
-    public MonthSummary(Long id, Member member, YearMonth date, String summary) {
+    public ChatRoom(Long id, Member member) {
         this.id = id;
         this.member = member;
-        this.date = date;
-        this.summary = summary;
     }
 }

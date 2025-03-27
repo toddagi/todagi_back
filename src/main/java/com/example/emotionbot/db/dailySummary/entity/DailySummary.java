@@ -3,6 +3,7 @@ package com.example.emotionbot.db.dailySummary.entity;
 import com.example.emotionbot.db.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,13 @@ public class DailySummary {
 
     @Column(name = "diary", columnDefinition = "varchar(100)", nullable = true)
     private String diary;
+
+    @Builder
+    public DailySummary(Long id, Member member, LocalDateTime date, String summary, String diary) {
+        this.id = id;
+        this.member = member;
+        this.date = date;
+        this.summary = summary;
+        this.diary = diary;
+    }
 }

@@ -2,9 +2,9 @@ package com.example.emotionbot.db.challenge.entity;
 
 import com.example.emotionbot.db.member.entity.Member;
 import com.example.emotionbot.enums.ChallengeOption;
-import com.example.emotionbot.enums.ChatMode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +28,12 @@ public class Challenge {
 
     @Column(name = "stamp_count", columnDefinition = "bigint(20)", nullable = false)
     private int stampCount;
+
+    @Builder
+    public Challenge(Long id, Member member, ChallengeOption challengeOption, int stampCount) {
+        this.id = id;
+        this.member = member;
+        this.challengeOption = challengeOption;
+        this.stampCount = stampCount;
+    }
 }
