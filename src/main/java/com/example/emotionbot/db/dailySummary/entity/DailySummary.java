@@ -19,7 +19,7 @@ public class DailySummary {
     @Column(name = "id", columnDefinition = "bigint(20)", nullable = false)
     private Long id;
 
-    @JoinColumn(name = "member_id", columnDefinition = "bigint", nullable = false)
+    @JoinColumn(name = "member_id", columnDefinition = "bigint(20)", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
