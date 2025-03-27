@@ -17,7 +17,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "bigint", nullable = false)
+    @Column(name = "id", columnDefinition = "bigint(20)", nullable = false)
     private Long id;
 
     @Column(name = "login_id", columnDefinition = "varchar(100)", nullable = false)
@@ -29,7 +29,7 @@ public class Member {
     @Column(name = "nickname", columnDefinition = "varchar(100)", nullable = false)
     private String nickname;
 
-    @Column(name = "clover", columnDefinition = "bigint(10000)", nullable = false)
+    @Column(name = "clover", columnDefinition = "bigint(100)", nullable = false)
     private int clover;
 
     @Column(name = "keyboard_mode", columnDefinition = "varchar(5)", nullable = false)
