@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum chatMode {
-    Thinking("T"),
-    Feeling("F");
+public enum ChatMode {
+    THINKING("T"),
+    FEELING("F");
     private final String type;
 }
