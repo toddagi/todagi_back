@@ -2,7 +2,7 @@ package com.example.emotionbot.common.handler;
 
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.response.APIErrorResponse;
-import com.example.emotionbot.enums.message.FailMessage;
+import com.example.emotionbot.common.exception.FailMessage;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
