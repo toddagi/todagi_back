@@ -1,6 +1,5 @@
 package com.example.emotionbot.common.exception;
 
-import com.example.emotionbot.enums.message.FailMessage;
 import lombok.Getter;
 
 @Getter
