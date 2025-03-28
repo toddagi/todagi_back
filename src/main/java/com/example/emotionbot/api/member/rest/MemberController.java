@@ -23,7 +23,6 @@ public class MemberController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto){
-        log.info("Sign up request received");
         Long createdMemberId = memberService.createAccount(signUpReqDto);
         return APISuccessResponse.of(HttpStatus.OK, createdMemberId);
     }

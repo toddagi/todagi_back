@@ -41,10 +41,11 @@ public class MemberService {
      * 로그인
      */
     public String login(LoginReqDto loginReqDto) {
-        Member member=memberRepository.findByLoginId(loginReqDto.getLoginId()).orElseThrow();
+        Member member=memberRepository.findByLoginId(loginReqDto.getLoginId()).orElseThrow(()->
+                new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())){
-            throw new EmotionBotException(FailMessage.CONFLICT_INTEGRITY);
+            throw new EmotionBotException(FailMessage.CONFLICT_WRONG_PW);
         }
         return jwtTokenUtil.createToken(member.getLoginId());
     }

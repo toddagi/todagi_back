@@ -36,6 +36,8 @@ public enum FailMessage {
     CONFLICT(HttpStatus.CONFLICT, 40900, "서버의 현재 상태와 요청이 충돌했습니다."),
     CONFLICT_INTEGRITY(HttpStatus.CONFLICT, 40901, "데이터 무결성 위반입니다."),
     CONFLICT_DUPLICATE_ID(HttpStatus.CONFLICT, 40902, "이미 존재하는 아이디입니다."),
+    CONFLICT_WRONG_PW(HttpStatus.CONFLICT, 40903, "비밀번호가 일치하지 않습니다"),
+    CONFLICT_NO_ID(HttpStatus.CONFLICT, 40904, "존재하지 않는 아이디입니다"),
 
 
 
