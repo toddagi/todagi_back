@@ -20,8 +20,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public static final String[] PERMIT_ALL_REQUESTS = {
-            "/auth/**",
-            "/"
+            "/auth/**"
     };
 
     @Bean
