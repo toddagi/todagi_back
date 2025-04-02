@@ -17,15 +17,15 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasMemberAnnotation=parameter.hasParameterAnnotation(MemberId.class);
-        boolean hasMemberType= Long.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasMemberAnnotation = parameter.hasParameterAnnotation(MemberId.class);
+        boolean hasMemberType = Long.class.isAssignableFrom(parameter.getParameterType());
 
-        return  hasMemberAnnotation&&hasMemberType;
+        return hasMemberAnnotation && hasMemberType;
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetail customUserDetail) {
             return customUserDetail.getMember().getId(); // member 객체 가져오기
         }

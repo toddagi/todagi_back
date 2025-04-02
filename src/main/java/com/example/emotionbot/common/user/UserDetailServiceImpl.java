@@ -14,11 +14,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserDetailServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
+
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         Member member = memberRepository.findByLoginId(loginId)
-                        .orElseThrow(() -> new UsernameNotFoundException("Could not found in database"));
+                .orElseThrow(() -> new UsernameNotFoundException("Could not found in database"));
 
-        return new CustomUserDetail(loginId,member);
+        return new CustomUserDetail(loginId, member);
     }
 }

@@ -22,14 +22,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto){
+    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
         Long createdMemberId = memberService.createAccount(signUpReqDto);
         return APISuccessResponse.of(HttpStatus.OK, createdMemberId);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<APISuccessResponse<String>> login(@Valid @RequestBody LoginReqDto loginReqDto){
-        return APISuccessResponse.of(HttpStatus.OK,memberService.login(loginReqDto));
+    public ResponseEntity<APISuccessResponse<String>> login(@Valid @RequestBody LoginReqDto loginReqDto) {
+        return APISuccessResponse.of(HttpStatus.OK, memberService.login(loginReqDto));
     }
 
 }

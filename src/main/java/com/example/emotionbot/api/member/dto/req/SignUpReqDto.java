@@ -9,7 +9,6 @@ public class SignUpReqDto {
     private String loginId;
     private String password;
     private String nickname;
-    private int clover;
     private KeyboardYn keyboardYn;
     private ChatMode chatMode;
 }
