@@ -23,22 +23,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
-    private final UserDetailsService userDetailsService;
-
     private static final String HEADER_NAME = "Authorization";
     private static final String SCHEME = "Bearer";
-
+    private final UserDetailsService userDetailsService;
     @Value("${spring.jwt.token.access-expiration-time}")
     private Long expirationMillis;
 
     @Value("${spring.jwt.secret-key}")
     private String secretKey;
     private SecretKey key;
-
-    @PostConstruct
-    public void initialize() {
-        key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
 
     public static String extract(HttpServletRequest request) {
         String authorization = request.getHeader(HEADER_NAME);
@@ -54,10 +47,15 @@ public class JwtTokenUtil {
         return null;
     }
 
+    @PostConstruct
+    public void initialize() {
+        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
     public String createToken(String subject) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationMillis);
-        try{
+        try {
             return Jwts.builder()
                     .setSubject(subject)
                     .setExpiration(expiration)

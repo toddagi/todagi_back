@@ -21,6 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -35,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     ArgumentResolver 등록
+     * ArgumentResolver 등록
      */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
