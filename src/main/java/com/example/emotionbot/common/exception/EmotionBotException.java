@@ -3,7 +3,7 @@ package com.example.emotionbot.common.exception;
 import lombok.Getter;
 
 @Getter
-public class EmotionBotException extends RuntimeException{
+public class EmotionBotException extends RuntimeException {
     private final FailMessage failMessage;
 
     public EmotionBotException(final FailMessage failMessage) {
