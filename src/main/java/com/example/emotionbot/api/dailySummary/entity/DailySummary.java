@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,8 +25,8 @@ public class DailySummary {
     private Member member;
 
     //Todo: LocalDate로 할 지 추후 논의 필요, nullable 여부도 논의 필요
-    @Column(name = "date", columnDefinition = "timestamp", nullable = false)
-    private LocalDateTime date;
+    @Column(name = "date", columnDefinition = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "summary", columnDefinition = "varchar(100)", nullable = true)
     private String summary;
@@ -34,11 +35,15 @@ public class DailySummary {
     private String diary;
 
     @Builder
-    public DailySummary(Long id, Member member, LocalDateTime date, String summary, String diary) {
+    public DailySummary(Long id, Member member, LocalDate date, String summary, String diary) {
         this.id = id;
         this.member = member;
         this.date = date;
         this.summary = summary;
         this.diary = diary;
+    }
+
+    public void updateDiary(String diary) {
+        this.diary=diary;
     }
 }
