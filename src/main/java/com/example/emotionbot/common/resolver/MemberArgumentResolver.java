@@ -27,7 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetail customUserDetail) {
-            return customUserDetail.getMember().getId(); // member 객체 가져오기
+            return customUserDetail.getMember().getId();
         }
         throw new EmotionBotException(FailMessage.UNAUTHORIZED);
     }
