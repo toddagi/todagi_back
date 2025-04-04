@@ -1,7 +1,6 @@
 package com.example.emotionbot.api.challenge.entity;
 
 import com.example.emotionbot.api.member.entity.Member;
-import com.example.emotionbot.enums.challenge.ChallengeOption;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

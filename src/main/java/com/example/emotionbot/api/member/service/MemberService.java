@@ -28,7 +28,7 @@ public class MemberService {
                 .password(passwordEncoder.encode(signUpReqDto.getPassword()))
                 .nickname(signUpReqDto.getNickname())
                 .clover(0)
-                .chatMode(signUpReqDto.getChatMode())
+                .talkType(signUpReqDto.getTalkType())
                 .keyboardYn(signUpReqDto.getKeyboardYn())
                 .build();
         return memberRepository.save(member).getId();

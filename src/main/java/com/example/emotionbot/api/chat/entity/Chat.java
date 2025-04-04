@@ -1,6 +1,5 @@
 package com.example.emotionbot.api.chat.entity;
 
-import com.example.emotionbot.api.chatRoom.entity.ChatRoom;
 import com.example.emotionbot.api.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,10 +19,6 @@ public class Chat {
     @Column(name = "id", columnDefinition = "bigint(20)", nullable = false)
     private Long id;
 
-    @JoinColumn(name = "chat_room_id", columnDefinition = "bigint(20)", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ChatRoom chatRoom;
-
     @JoinColumn(name = "member_id", columnDefinition = "bigint(20)")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -35,16 +30,20 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private Sender sender;
 
+    @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ChatType type;
+
     @Column(name = "send_time", columnDefinition = "timestamp", nullable = false)
     private LocalDateTime sendTime;
 
     @Builder
-    public Chat(Long id, ChatRoom chatRoom, Member member, String message, Sender sender,LocalDateTime sendTime) {
+    public Chat(Long id, Member member, String message, Sender sender,ChatType type,LocalDateTime sendTime) {
         this.id = id;
-        this.chatRoom = chatRoom;
         this.member = member;
         this.message = message;
         this.sender=sender;
+        this.type=type;
         this.sendTime = sendTime;
     }
 }
