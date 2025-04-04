@@ -7,8 +7,6 @@ import com.example.emotionbot.common.response.APISuccessResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +20,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
+    public APISuccessResponse<Long> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
         Long createdMemberId = memberService.createAccount(signUpReqDto);
-        return APISuccessResponse.of(HttpStatus.OK, createdMemberId);
+        return APISuccessResponse.ofCreateSuccess(createdMemberId);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<APISuccessResponse<String>> login(@Valid @RequestBody LoginReqDto loginReqDto) {
-        return APISuccessResponse.of(HttpStatus.OK, memberService.login(loginReqDto));
+    public APISuccessResponse<String> login(@Valid @RequestBody LoginReqDto loginReqDto) {
+        return APISuccessResponse.ofCreateSuccess(memberService.login(loginReqDto));
     }
 
 }
