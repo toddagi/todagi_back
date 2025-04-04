@@ -1,7 +1,6 @@
 package com.example.emotionbot.api.challenge.entity;
 
 import com.example.emotionbot.api.member.entity.Member;
-import com.example.emotionbot.enums.challenge.ChallengeOption;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +17,7 @@ public class Challenge {
     @Column(name = "id", columnDefinition = "bigint(20)", nullable = false)
     private Long id;
 
-    @JoinColumn(name = "member_id", columnDefinition = "bigint", nullable = false)
+    @JoinColumn(name = "member_id", columnDefinition = "bigint(20)", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 

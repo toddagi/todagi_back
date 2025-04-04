@@ -14,6 +14,7 @@ import java.util.List;
 public class CustomUserDetail implements UserDetails {
     private String email;
     private Member member;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

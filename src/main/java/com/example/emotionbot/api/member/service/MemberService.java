@@ -18,33 +18,27 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
 
-    /**
-     회원가입
-     */
     public Long createAccount(SignUpReqDto signUpReqDto) {
 
-        if(memberRepository.existsByLoginId(signUpReqDto.getLoginId())){
+        if (memberRepository.existsByLoginId(signUpReqDto.getLoginId())) {
             throw new EmotionBotException(FailMessage.CONFLICT_DUPLICATE_ID);
         }
-        Member member= Member.builder()
+        Member member = Member.builder()
                 .loginId(signUpReqDto.getLoginId())
                 .password(passwordEncoder.encode(signUpReqDto.getPassword()))
                 .nickname(signUpReqDto.getNickname())
                 .clover(0)
-                .chatMode(signUpReqDto.getChatMode())
+                .talkType(signUpReqDto.getTalkType())
                 .keyboardYn(signUpReqDto.getKeyboardYn())
                 .build();
         return memberRepository.save(member).getId();
     }
 
-    /**
-     * 로그인
-     */
     public String login(LoginReqDto loginReqDto) {
-        Member member=memberRepository.findByLoginId(loginReqDto.getLoginId()).orElseThrow(()->
+        Member member = memberRepository.findByLoginId(loginReqDto.getLoginId()).orElseThrow(() ->
                 new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
-        if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())){
+        if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
             throw new EmotionBotException(FailMessage.CONFLICT_WRONG_PW);
         }
         return jwtTokenUtil.createToken(member.getLoginId());
