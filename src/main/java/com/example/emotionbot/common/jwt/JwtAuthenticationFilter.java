@@ -1,5 +1,6 @@
 package com.example.emotionbot.common.jwt;
 
+import com.example.emotionbot.common.response.APIErrorResponse;
 import com.example.emotionbot.common.utils.JwtTokenUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/swagger-ui.html")
+                || path.startsWith("/webjars/")
+                || path.startsWith("/auth");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtTokenUtil.extract(request);
         try {
@@ -31,22 +44,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 verifyTokenAndSetAuthentication(token);
             }
             filterChain.doFilter(request, response);
-        } catch (ServletException e ) {
+        } catch (ServletException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
-            //ResponseMessage responseMessage = new ResponseMessage(ErrorType.INTERNAL_SERVER.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-            //response.getWriter().write(convertObjectToJson(responseMessage));
-        } catch (JwtException e){
+            APIErrorResponse responseMessage = new APIErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            response.getWriter().write(convertObjectToJson(responseMessage));
+        } catch (JwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
-            //ResponseMessage responseMessage = new ResponseMessage(e.getMessage(), HttpStatus.UNAUTHORIZED.value(), e.getMessage());
-            //response.getWriter().write(convertObjectToJson(responseMessage));
+            APIErrorResponse responseMessage = new APIErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            response.getWriter().write(convertObjectToJson(responseMessage));
         }
     }
 
-    private void verifyTokenAndSetAuthentication(String token){
+    private void verifyTokenAndSetAuthentication(String token) {
         Authentication authentication = jwtTokenUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

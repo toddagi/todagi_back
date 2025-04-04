@@ -23,11 +23,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
-    private final UserDetailsService userDetailsService;
-
     private static final String HEADER_NAME = "Authorization";
     private static final String SCHEME = "Bearer";
-
+    private final UserDetailsService userDetailsService;
     @Value("${spring.jwt.token.access-expiration-time}")
     private Long expirationMillis;
 
@@ -35,11 +33,7 @@ public class JwtTokenUtil {
     private String secretKey;
     private SecretKey key;
 
-    @PostConstruct
-    public void initialize() {
-        key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
-
+    //문자열 추출
     public static String extract(HttpServletRequest request) {
         String authorization = request.getHeader(HEADER_NAME);
         if (!Objects.isNull(authorization)
@@ -54,10 +48,15 @@ public class JwtTokenUtil {
         return null;
     }
 
+    @PostConstruct
+    public void initialize() {
+        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
     public String createToken(String subject) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationMillis);
-        try{
+        try {
             return Jwts.builder()
                     .setSubject(subject)
                     .setExpiration(expiration)
@@ -68,6 +67,14 @@ public class JwtTokenUtil {
         }
     }
 
+    public Authentication getAuthentication(String token) {
+        String email = verify(token).getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, "", userDetails.getAuthorities());
+    }
+
+    //토큰이 유효한 지 검증
     public Claims verify(String token) {
         try {
             return Jwts.parserBuilder()
@@ -78,12 +85,5 @@ public class JwtTokenUtil {
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtException("유효하지 않은 토큰입니다.");
         }
-    }
-
-    public Authentication getAuthentication(String token) {
-        String email = verify(token).getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(
-                userDetails, "", userDetails.getAuthorities());
     }
 }
