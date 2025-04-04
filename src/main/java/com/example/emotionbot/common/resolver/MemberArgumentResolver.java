@@ -5,7 +5,6 @@ import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.user.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -17,7 +16,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasMemberAnnotation = parameter.hasParameterAnnotation(MemberId.class);
+        boolean hasMemberAnnotation = parameter.hasParameterAnnotation(Authentication.class);
         boolean hasMemberType = Long.class.isAssignableFrom(parameter.getParameterType());
 
         return hasMemberAnnotation && hasMemberType;
@@ -25,7 +24,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetail customUserDetail) {
             return customUserDetail.getMember().getId();
         }

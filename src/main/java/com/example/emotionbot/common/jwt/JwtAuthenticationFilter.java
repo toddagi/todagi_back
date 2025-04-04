@@ -1,7 +1,8 @@
 package com.example.emotionbot.common.jwt;
 
+import com.example.emotionbot.common.auth.BearerAuthExtractor;
 import com.example.emotionbot.common.response.APIErrorResponse;
-import com.example.emotionbot.common.utils.JwtTokenUtil;
+import com.example.emotionbot.common.utils.JwtAuthenticationProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtTokenUtil.extract(request);
+        String token = BearerAuthExtractor.extract(request);
         try {
             if (!Objects.isNull(token)) {
                 verifyTokenAndSetAuthentication(token);
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void verifyTokenAndSetAuthentication(String token) {
-        Authentication authentication = jwtTokenUtil.getAuthentication(token);
+        Authentication authentication = jwtAuthenticationProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

@@ -5,6 +5,7 @@ import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.response.APIErrorResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -121,7 +123,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIErrorResponse> handleGeneralException(final Exception exception) {
-
+        log.error("Unhandled exception occurred", exception);
         final FailMessage failMessage = FailMessage.INTERNAL_SERVER_ERROR;
 
         return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), failMessage.getMessage());
