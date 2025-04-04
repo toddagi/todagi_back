@@ -28,8 +28,8 @@ public class MemberController {
     private final BearerAuthExtractor bearerAuthExtractor;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpRequest signUpReqDto) {
-        Long createdMemberId = memberService.createAccount(signUpReqDto);
+    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+        Long createdMemberId = memberService.createAccount(signUpRequest);
         return APISuccessResponse.of(HttpStatus.OK, createdMemberId);
     }
 
