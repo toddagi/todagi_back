@@ -1,7 +1,5 @@
 package com.example.emotionbot.api.member.entity;
 
-import com.example.emotionbot.enums.chat.ChatMode;
-import com.example.emotionbot.enums.keyboard.KeyboardYn;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,22 +30,22 @@ public class Member {
     @Column(name = "clover", columnDefinition = "bigint(100)", nullable = false)
     private int clover;
 
-    @Column(name = "keyboard_mode", columnDefinition = "varchar(5)", nullable = false)
+    @Column(name = "keyboardYn", columnDefinition = "varchar(5)", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private KeyboardYn keyboardYn;
 
-    @Column(name = "chat_mode", columnDefinition = "varchar(5)", nullable = false)
+    @Column(name = "talk_mode", columnDefinition = "varchar(5)", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private ChatMode chatMode;
+    private TalkType talkType;
 
     @Builder
-    public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, ChatMode chatMode) {
+    public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, TalkType talkType) {
         this.loginId = loginId;
         this.password = password;
         this.nickname = nickname;
         this.clover = clover;
         this.keyboardYn = keyboardYn;
-        this.chatMode = chatMode;
+        this.talkType = talkType;
     }
 }
 
