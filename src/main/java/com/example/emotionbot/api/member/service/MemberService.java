@@ -3,6 +3,7 @@ package com.example.emotionbot.api.member.service;
 import com.example.emotionbot.api.jwt.service.TokenService;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
+import com.example.emotionbot.api.member.dto.response.LoginResponse;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
@@ -37,14 +38,14 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
-    public Member login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByLoginId(loginRequest.loginId()).orElseThrow(() ->
                 new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
             throw new EmotionBotException(FailMessage.CONFLICT_WRONG_PW);
         }
-        return member;
+        return tokenService.generateToken(member.getId());
     }
 
 

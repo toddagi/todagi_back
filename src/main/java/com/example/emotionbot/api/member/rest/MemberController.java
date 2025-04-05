@@ -35,8 +35,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<APISuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
-        final Member member = memberService.login(loginRequest);
-        final LoginResponse loginResponse = tokenService.generateToken(member.getId());
+        final LoginResponse loginResponse = memberService.login(loginRequest);
         return APISuccessResponse.of(HttpStatus.OK, loginResponse);
     }
 
