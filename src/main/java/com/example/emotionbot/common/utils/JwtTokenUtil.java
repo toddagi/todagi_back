@@ -72,8 +72,8 @@ public class JwtTokenUtil {
     }
 
     public Authentication getAuthentication(String token) {
-        String email = verify(token).getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        String loginId = verify(token).getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
         return new UsernamePasswordAuthenticationToken(
                 userDetails, "", userDetails.getAuthorities());
     }

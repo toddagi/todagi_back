@@ -3,6 +3,7 @@ package com.example.emotionbot.api.member.service;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
+import com.example.emotionbot.api.member.dto.response.LogoutResponse;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
@@ -76,5 +77,15 @@ public class MemberService {
         String newAccessToken = jwtTokenUtil.createToken(loginId);
 
         return new LoginResponse(newAccessToken, refreshToken);
+    }
+
+    public LogoutResponse logOut(String refreshToken) {
+        refreshToken=jwtTokenUtil.extractTokenValue(refreshToken);
+        Claims claims = jwtTokenUtil.verify(refreshToken);
+        String loginId = claims.getSubject();
+        redisTemplate.delete(loginId);
+
+        return new LogoutResponse(loginId+"님 로그아웃되었습니다");
+
     }
 }
