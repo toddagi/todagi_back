@@ -19,18 +19,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
+
+    @Operation(summary = "회원가입")
     @PostMapping("/sign-up")
-    public APISuccessResponse<Long> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<APISuccessResponse<Long>> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         Long createdMemberId = memberService.createAccount(signUpRequest);
-        return APISuccessResponse.ofCreateSuccess(createdMemberId);
+        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(createdMemberId));
     }
 
+    @Operation(summary = "로그인",description = "아이디와 비밀번호를 입력하면 access 토큰과 refresh 토큰을 발급받습니다.")
     @PostMapping("/login")
-    public APISuccessResponse<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return APISuccessResponse.ofCreateSuccess(memberService.login(loginRequest));
+    public ResponseEntity<APISuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(memberService.login(loginRequest)));
     }
 
-    @Operation(summary = "토큰 재발급", description = "Refresh Token을 통해 Access Token을 재발급받습니다.")
+    @Operation(summary = "토큰 재발급", description = "Refresh Token을 통해 Access Token을 재발급받습니다.\n\n"
+            +"요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.")
     @PostMapping("/refresh")
     public ResponseEntity<APISuccessResponse<LoginResponse>> reissueToken(@RequestHeader("Authorization") String refreshToken){
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(memberService.reissueToken(refreshToken)));
