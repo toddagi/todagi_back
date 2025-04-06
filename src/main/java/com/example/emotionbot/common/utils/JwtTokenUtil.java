@@ -1,5 +1,7 @@
 package com.example.emotionbot.common.utils;
 
+import com.example.emotionbot.common.exception.EmotionBotException;
+import com.example.emotionbot.common.exception.FailMessage;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -105,5 +107,26 @@ public class JwtTokenUtil {
 
     public long getRefreshTokenExpirationMillis() {
         return refreshExpirationMillis;
+    }
+
+    public String extractTokenValue(final String bearerToken) {
+        validateTokenValue(bearerToken);
+        validateBearerKey(bearerToken);
+
+        return bearerToken.substring(SCHEME.length()).trim();
+    }
+
+    private void validateTokenValue(final String bearerToken) {
+        if (bearerToken == null || bearerToken.isEmpty() || bearerToken.trim().equals(SCHEME)) {
+            log.warn("Autherizaiton 헤더 값이 없습니다.");
+            throw new EmotionBotException(FailMessage.UNAUTHORIZED_EMPTY_HEADER);
+        }
+    }
+
+    private void validateBearerKey(final String bearerToken) {
+        if (!bearerToken.toLowerCase().startsWith(SCHEME.toLowerCase())) {
+            log.warn("AuthHeader의 값이 Bearer로 시작하지 않습니다: {}", bearerToken);
+            throw new EmotionBotException(FailMessage.UNAUTHORIZED_INVALID_TOKEN);
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.utils.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,5 +61,20 @@ public class MemberService {
                     TimeUnit.MILLISECONDS
         );
         return LoginResponse.of(accessToken,refreshToken);
+    }
+
+    public LoginResponse reissueToken(String refreshToken) {
+        refreshToken=jwtTokenUtil.extractTokenValue(refreshToken);
+        Claims claims = jwtTokenUtil.verify(refreshToken);
+        String loginId = claims.getSubject();
+
+        String storedRefreshToken = redisTemplate.opsForValue().get(loginId);
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+            throw new EmotionBotException(FailMessage.BAD_REQUEST);
+        }
+
+        String newAccessToken = jwtTokenUtil.createToken(loginId);
+
+        return new LoginResponse(newAccessToken, refreshToken);
     }
 }
