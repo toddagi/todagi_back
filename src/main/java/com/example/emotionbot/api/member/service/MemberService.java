@@ -1,46 +1,64 @@
 package com.example.emotionbot.api.member.service;
 
-import com.example.emotionbot.api.member.dto.req.LoginReqDto;
-import com.example.emotionbot.api.member.dto.req.SignUpReqDto;
+import com.example.emotionbot.api.member.dto.request.LoginRequest;
+import com.example.emotionbot.api.member.dto.request.SignUpRequest;
+import com.example.emotionbot.api.member.dto.response.LoginResponse;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.utils.JwtTokenUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public Long createAccount(SignUpReqDto signUpReqDto) {
+    public Long createAccount(@Valid SignUpRequest signUpRequest) {
 
-        if (memberRepository.existsByLoginId(signUpReqDto.getLoginId())) {
+        if (memberRepository.existsByLoginId(signUpRequest.loginId())) {
             throw new EmotionBotException(FailMessage.CONFLICT_DUPLICATE_ID);
         }
         Member member = Member.builder()
-                .loginId(signUpReqDto.getLoginId())
-                .password(passwordEncoder.encode(signUpReqDto.getPassword()))
-                .nickname(signUpReqDto.getNickname())
+                .loginId(signUpRequest.loginId())
+                .password(passwordEncoder.encode(signUpRequest.password()))
+                .nickname(signUpRequest.nickname())
                 .clover(0)
-                .talkType(signUpReqDto.getTalkType())
-                .keyboardYn(signUpReqDto.getKeyboardYn())
+                .talkType(signUpRequest.talkType())
+                .keyboardYn(signUpRequest.keyboardYn())
                 .build();
         return memberRepository.save(member).getId();
     }
 
-    public String login(LoginReqDto loginReqDto) {
-        Member member = memberRepository.findByLoginId(loginReqDto.getLoginId()).orElseThrow(() ->
+    public LoginResponse login(@Valid LoginRequest loginRequest) {
+        Member member = memberRepository.findByLoginId(loginRequest.loginId()).orElseThrow(() ->
                 new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
-        if (!passwordEncoder.matches(loginReqDto.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
             throw new EmotionBotException(FailMessage.CONFLICT_WRONG_PW);
         }
-        return jwtTokenUtil.createToken(member.getLoginId());
+
+        String accessToken=jwtTokenUtil.createToken(loginRequest.loginId());
+        String refreshToken=jwtTokenUtil.createRefreshToken(loginRequest.loginId());
+
+        redisTemplate.opsForValue().set(
+                    member.getLoginId(),
+                    refreshToken,
+                    jwtTokenUtil.getRefreshTokenExpirationMillis(),
+                    TimeUnit.MILLISECONDS
+        );
+        return LoginResponse.of(accessToken,refreshToken);
     }
 }
