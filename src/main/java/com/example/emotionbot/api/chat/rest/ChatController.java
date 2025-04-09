@@ -2,9 +2,11 @@ package com.example.emotionbot.api.chat.rest;
 
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
+import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
+import com.example.emotionbot.api.chat.service.AiService;
 import com.example.emotionbot.api.chat.service.ChatService;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
@@ -29,6 +31,7 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberRepository memberRepository;
     private final ChatService chatService;
+    private final AiService aiService;
 
     @MessageMapping("/enter") // /app/enter
     public void enter(ChatEnterRequest chatEnterRequest) {
@@ -57,55 +60,55 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/chat", APISuccessResponse.ofSuccess(response));
     }
 
-//    @MessageMapping("/send") // /app/send
-//    public void sendMessage(ChatEnterRequest chatEnterRequest) {
-//        log.info("💬 사용자 메시지 수신: {}", chatEnterRequest);
-//
-//        Member member = memberRepository.findById(chatEnterRequest.memberId())
-//                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
-//
-//        // 1. 사용자 메시지 DB 저장
-//        Chat userMessage = Chat.builder()
-//                .member(member)
-//                .message(chatEnterRequest.)
-//                .sender(Sender.USER)
-//                .type(ChatType.TALK)
-//                .sendTime(LocalDateTime.now())
-//                .build();
-//
-//        chatService.saveChat(userMessage);
-//
-//        // 2. 사용자 메시지 프론트에 전송
-//        ChatEnterResponse userResponse = ChatEnterResponse.builder()
-//                .memberId(member.getId())
-//                .message(userMessage.getMessage())
-//                .sender(Sender.USER)
-//                .build();
-//
-//        messagingTemplate.convertAndSend("/topic/chat", userResponse);
-//
-//        // 3. AI 서버에 REST API 호출
-//        String aiResponseText = aiService.askToAi(chatEnterRequest.message());
-//
-//        // 4. AI 응답 DB 저장
-//        Chat aiMessage = Chat.builder()
-//                .member(member)
-//                .message(aiResponseText)
-//                .sender(Sender.BOT)
-//                .type(ChatType.TALK)
-//                .sendTime(LocalDateTime.now())
-//                .build();
-//
-//        chatService.saveChat(aiMessage);
-//
-//        // 5. AI 응답 프론트에 전송
-//        ChatEnterResponse botResponse = ChatEnterResponse.builder()
-//                .memberId(member.getId())
-//                .message(aiMessage.getMessage())
-//                .sender(Sender.BOT)
-//                .build();
-//
-//        messagingTemplate.convertAndSend("/topic/chat", botResponse);
-//    }
+    @MessageMapping("/send") // /app/send
+    public void sendMessage(ChatSendRequest chatSendRequest) {
+        log.info("💬 사용자 메시지 수신: {}", chatSendRequest);
+
+        Member member = memberRepository.findById(chatSendRequest.memberId())
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+
+        // 1. 사용자 메시지 DB 저장
+        Chat userMessage = Chat.builder()
+                .member(member)
+                .message(chatSendRequest.message())
+                .sender(Sender.USER)
+                .type(ChatType.SEND)
+                .sendTime(LocalDateTime.now())
+                .build();
+
+        chatService.saveChat(userMessage);
+
+        // 2. 사용자 메시지 프론트에 전송
+        ChatEnterResponse userResponse = ChatEnterResponse.builder()
+                .memberId(member.getId())
+                .message(userMessage.getMessage())
+                .sender(Sender.USER)
+                .build();
+
+        messagingTemplate.convertAndSend("/topic/chat", userResponse);
+
+        // 3. AI 서버에 REST API 호출
+        String aiResponseText = aiService.askToAi(chatSendRequest.message());
+
+        // 4. AI 응답 DB 저장
+        Chat aiMessage = Chat.builder()
+                .member(member)
+                .message(aiResponseText)
+                .sender(Sender.BOT)
+                .type(ChatType.SEND)
+                .sendTime(LocalDateTime.now())
+                .build();
+
+        chatService.saveChat(aiMessage);
+
+        // 5. AI 응답 프론트에 전송
+        ChatEnterResponse botResponse = ChatEnterResponse.builder()
+                .memberId(member.getId())
+                .message(aiMessage.getMessage())
+                .sender(Sender.BOT)
+                .build();
+
+        messagingTemplate.convertAndSend("/topic/chat", botResponse);
+    }
 
 }
