@@ -52,20 +52,20 @@ public class MemberService {
             throw new EmotionBotException(FailMessage.CONFLICT_WRONG_PW);
         }
 
-        String accessToken=jwtTokenUtil.createToken(loginRequest.loginId());
-        String refreshToken=jwtTokenUtil.createRefreshToken(loginRequest.loginId());
+        String accessToken = jwtTokenUtil.createToken(loginRequest.loginId());
+        String refreshToken = jwtTokenUtil.createRefreshToken(loginRequest.loginId());
 
         redisTemplate.opsForValue().set(
-                    member.getLoginId(),
-                    refreshToken,
-                    jwtTokenUtil.getRefreshTokenExpirationMillis(),
-                    TimeUnit.MILLISECONDS
+                member.getLoginId(),
+                refreshToken,
+                jwtTokenUtil.getRefreshTokenExpirationMillis(),
+                TimeUnit.MILLISECONDS
         );
-        return LoginResponse.of(accessToken,refreshToken);
+        return LoginResponse.of(accessToken, refreshToken);
     }
 
     public LoginResponse reissueToken(String refreshToken) {
-        refreshToken=jwtTokenUtil.extractTokenValue(refreshToken);
+        refreshToken = jwtTokenUtil.extractTokenValue(refreshToken);
         Claims claims = jwtTokenUtil.verify(refreshToken);
         String loginId = claims.getSubject();
 
@@ -80,12 +80,12 @@ public class MemberService {
     }
 
     public LogoutResponse logOut(String refreshToken) {
-        refreshToken=jwtTokenUtil.extractTokenValue(refreshToken);
+        refreshToken = jwtTokenUtil.extractTokenValue(refreshToken);
         Claims claims = jwtTokenUtil.verify(refreshToken);
         String loginId = claims.getSubject();
         redisTemplate.delete(loginId);
 
-        return new LogoutResponse(loginId+"님 로그아웃되었습니다");
+        return new LogoutResponse(loginId + "님 로그아웃되었습니다");
 
     }
 }
