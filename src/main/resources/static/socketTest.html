@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket STOMP Test</title>
+</head>
+<body>
+<h2>WebSocket STOMP 테스트</h2>
+<div>
+    <button onclick="connect()">Connect</button>
+    <button onclick="enterChat()">입장</button>
+</div>
+<pre id="log" style="background-color: #f0f0f0; padding: 10px;"></pre>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+    let stompClient = null;
+
+    function log(message) {
+        const logArea = document.getElementById("log");
+        logArea.textContent += message + "\n";
+    }
+
+    function connect() {
+        const socket = new SockJS("http://localhost:8080/ws"); // 서버 주소 확인 필요
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            log("✅ 연결 성공: " + frame);
+
+            stompClient.subscribe("/topic/chat", function (response) {
+                const msg = JSON.parse(response.body);
+                log("📩 받은 메시지: " + JSON.stringify(msg));
+            });
+        }, function (error) {
+            log("❌ 연결 실패: " + error);
+        });
+    }
+
+    function enterChat() {
+        if (!stompClient || !stompClient.connected) {
+            log("❗ 먼저 Connect 버튼을 눌러주세요.");
+            return;
+        }
+
+        const message = {
+            memberId: 1, // ← 실제 존재하는 memberId로 수정해야 함!
+            sendTime: new Date().toISOString(),
+            type: "ENTER",
+            sender: "USER"
+        };
+
+        stompClient.send("/app/enter", {}, JSON.stringify(message));
+        log("🚀 입장 메시지 전송함: " + JSON.stringify(message));
+    }
+</script>
+</body>
+</html>
+

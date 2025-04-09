@@ -23,7 +23,12 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/webjars/**",
+            "/ws/**",
+            "/topic/**",
+            "/app/**",
+            "/test.html",
+            "/**"
     };
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
