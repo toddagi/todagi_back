@@ -7,9 +7,10 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record ChatRequest(
+public record ChatSendRequest(
         Long memberId,
         LocalDateTime sendTime,
+        String message,
         ChatType type,
         Sender sender
 ) {
