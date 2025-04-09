@@ -30,7 +30,7 @@ public class Member {
     @Column(name = "clover", columnDefinition = "bigint(100)", nullable = false)
     private int clover;
 
-    @Column(name = "keyboardYn", columnDefinition = "varchar(5)", nullable = false)
+    @Column(name = "keyboard_yn", columnDefinition = "varchar(5)", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private KeyboardYn keyboardYn;
 
