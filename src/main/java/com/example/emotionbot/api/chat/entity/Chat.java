@@ -38,12 +38,12 @@ public class Chat {
     private LocalDateTime sendTime;
 
     @Builder
-    public Chat(Long id, Member member, String message, Sender sender,ChatType type,LocalDateTime sendTime) {
+    public Chat(Long id, Member member, String message, Sender sender, ChatType type, LocalDateTime sendTime) {
         this.id = id;
         this.member = member;
         this.message = message;
-        this.sender=sender;
-        this.type=type;
+        this.sender = sender;
+        this.type = type;
         this.sendTime = sendTime;
     }
 }

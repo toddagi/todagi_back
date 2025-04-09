@@ -1,7 +1,7 @@
 package com.example.emotionbot.api.member.dto.request;
 
-import com.example.emotionbot.api.member.entity.TalkType;
 import com.example.emotionbot.api.member.entity.KeyboardYn;
+import com.example.emotionbot.api.member.entity.TalkType;
 import lombok.Builder;
 
 @Builder

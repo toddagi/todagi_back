@@ -43,20 +43,9 @@ public class JwtTokenUtil {
 
     private SecretKey key;
 
-    @PostConstruct
-    public void initialize() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-    }
-
     public static String extract(HttpServletRequest request) {
         String authorization = request.getHeader(HEADER_NAME);
         return parseBearerToken(authorization);
-    }
-
-    public String extractTokenValue(String bearerToken) {
-        validateTokenValue(bearerToken);
-        validateBearerScheme(bearerToken);
-        return parseBearerToken(bearerToken);
     }
 
     private static String parseBearerToken(String headerValue) {
@@ -67,6 +56,17 @@ public class JwtTokenUtil {
         String token = headerValue.substring(SCHEME.length()).trim();
         int commaIndex = token.indexOf(',');
         return (commaIndex > 0) ? token.substring(0, commaIndex) : token;
+    }
+
+    @PostConstruct
+    public void initialize() {
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String extractTokenValue(String bearerToken) {
+        validateTokenValue(bearerToken);
+        validateBearerScheme(bearerToken);
+        return parseBearerToken(bearerToken);
     }
 
     private void validateTokenValue(String bearerToken) {

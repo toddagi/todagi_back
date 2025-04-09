@@ -27,16 +27,16 @@ public class MemberController {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(createdMemberId));
     }
 
-    @Operation(summary = "로그인",description = "아이디와 비밀번호를 입력하면 access 토큰과 refresh 토큰을 발급받습니다.")
+    @Operation(summary = "로그인", description = "아이디와 비밀번호를 입력하면 access 토큰과 refresh 토큰을 발급받습니다.")
     @PostMapping("/login")
     public ResponseEntity<APISuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(memberService.login(loginRequest)));
     }
 
     @Operation(summary = "토큰 재발급", description = "Refresh Token을 통해 Access Token을 재발급받습니다.\n\n"
-            +"요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.")
+            + "요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.")
     @PostMapping("/refresh")
-    public ResponseEntity<APISuccessResponse<LoginResponse>> reissueToken(@RequestHeader("Authorization") String refreshToken){
+    public ResponseEntity<APISuccessResponse<LoginResponse>> reissueToken(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(memberService.reissueToken(refreshToken)));
     }
 
@@ -44,7 +44,7 @@ public class MemberController {
             + "📌 요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.\n"
             + "✅ 로그아웃 시 해당 토큰은 더 이상 사용할 수 없게 됩니다.")
     @PostMapping("/logout")
-    public ResponseEntity<APISuccessResponse<LogoutResponse>> logout(@RequestHeader("Authorization") String refreshToken){
+    public ResponseEntity<APISuccessResponse<LogoutResponse>> logout(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(memberService.logOut(refreshToken)));
     }
 }
