@@ -87,7 +87,8 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/chat", userResponse);
 
         // 3. AI 서버에 REST API 호출
-        String aiResponseText = aiService.askToAi(chatSendRequest.message());
+        String aiResponseText = aiService.askToAi(chatSendRequest);
+
 
         // 4. AI 응답 DB 저장
         Chat aiMessage = Chat.builder()
