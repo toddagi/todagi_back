@@ -61,7 +61,6 @@ public class ChatController {
 
     @MessageMapping("/send") // /app/send
     public void sendMessage(ChatSendRequest chatSendRequest) {
-        log.info("💬 사용자 메시지 수신: {}", chatSendRequest);
 
         Member member = memberRepository.findById(chatSendRequest.memberId())
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
@@ -77,17 +76,18 @@ public class ChatController {
 
         chatService.saveChat(userMessage);
 
-        // 2. 사용자 메시지 프론트에 전송
+         //2. 사용자 메시지 프론트에 전송
         ChatEnterResponse userResponse = ChatEnterResponse.builder()
                 .memberId(member.getId())
                 .message(userMessage.getMessage())
                 .sender(Sender.USER)
                 .build();
-
         messagingTemplate.convertAndSend("/topic/chat", userResponse);
-
+        log.info("💬 사용자 메시지 수신2: {}", chatSendRequest);
         // 3. AI 서버에 REST API 호출
-        String aiResponseText = aiService.askToAi(chatSendRequest.message());
+        String aiResponseText = aiService.askToAi(chatSendRequest);
+        log.info("💬 사용자 메시지 수신3: {}", chatSendRequest);
+
 
         // 4. AI 응답 DB 저장
         Chat aiMessage = Chat.builder()
@@ -99,6 +99,7 @@ public class ChatController {
                 .build();
 
         chatService.saveChat(aiMessage);
+        log.info("💬 사용자 메시지 수신4: {}", chatSendRequest);
 
         // 5. AI 응답 프론트에 전송
         ChatEnterResponse botResponse = ChatEnterResponse.builder()
@@ -106,8 +107,10 @@ public class ChatController {
                 .message(aiMessage.getMessage())
                 .sender(Sender.BOT)
                 .build();
+        log.info("💬 사용자 메시지 수신5: {}", chatSendRequest);
 
         messagingTemplate.convertAndSend("/topic/chat", botResponse);
+        log.info("💬 사용자 메시지 수신6: {}", chatSendRequest);
     }
 
 }
