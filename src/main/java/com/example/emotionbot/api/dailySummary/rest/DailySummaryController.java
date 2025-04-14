@@ -1,11 +1,11 @@
 package com.example.emotionbot.api.dailySummary.rest;
 
-import com.example.emotionbot.api.dailySummary.dto.req.DiaryRequestDto;
+import com.example.emotionbot.api.dailySummary.dto.req.DiaryRequest;
 import com.example.emotionbot.api.dailySummary.service.DailySummaryService;
 import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/diary")
 public class DailySummaryController {
     private final DailySummaryService dailySummaryService;
-    @PostMapping
-    public ResponseEntity<APISuccessResponse<Long>> createDiary(@MemberId Long memberId, @RequestBody DiaryRequestDto diaryRequestDto){
-        Long diaryId=dailySummaryService.saveOrUpdateDiary(memberId,diaryRequestDto);
-        return APISuccessResponse.of(HttpStatus.OK, diaryId);
 
+    @Operation(summary = "일기 작성", description = "일기를 작성합니다")
+    @PostMapping
+    public ResponseEntity<APISuccessResponse<Long>> createDiary(@MemberId Long memberId, @RequestBody DiaryRequest diaryRequest){
+        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(dailySummaryService.saveOrUpdateDiary(memberId, diaryRequest)));
     }
 
 }
