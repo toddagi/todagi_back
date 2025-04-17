@@ -18,5 +18,16 @@ public enum Feeling {
             default -> throw new IllegalArgumentException("Invalid value: " + value);
         };
     }
+
+    public static int toValue(String value) {
+        return switch (value) {
+            case "ANGRY" -> 0;
+            case "ANNOY" -> 1;
+            case "SLEEPY" -> 2;
+            case "GOOD" -> 3;
+            case "HAPPY" -> 4;
+            default -> throw new IllegalArgumentException("Invalid value: " + value);
+        };
+    }
 }
 
