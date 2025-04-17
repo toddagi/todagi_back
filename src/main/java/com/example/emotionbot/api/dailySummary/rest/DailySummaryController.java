@@ -6,6 +6,7 @@ import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/diary")
+@Slf4j
 public class DailySummaryController {
     private final DailySummaryService dailySummaryService;
 
     @Operation(summary = "일기 작성", description = "일기를 작성합니다")
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<APISuccessResponse<Long>> createDiary(@MemberId Long memberId, @RequestBody DiaryRequest diaryRequest){
-        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(dailySummaryService.saveOrUpdateDiary(memberId, diaryRequest)));
+        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(dailySummaryService.saveDiary(memberId, diaryRequest)));
     }
 
 }

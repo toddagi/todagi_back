@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -24,7 +23,6 @@ public class DailySummary {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    //Todo: LocalDate로 할 지 추후 논의 필요, nullable 여부도 논의 필요
     @Column(name = "date", columnDefinition = "date", nullable = false)
     private LocalDate date;
 
@@ -34,13 +32,18 @@ public class DailySummary {
     @Column(name = "diary", columnDefinition = "varchar(100)", nullable = true)
     private String diary;
 
+    @Column(name="feeling")
+    @Enumerated(value = EnumType.STRING)
+    private Feeling feeling;
+
     @Builder
-    public DailySummary(Long id, Member member, LocalDate date, String summary, String diary) {
+    public DailySummary(Long id, Member member, LocalDate date, String summary, String diary,Feeling feeling ) {
         this.id = id;
         this.member = member;
         this.date = date;
         this.summary = summary;
         this.diary = diary;
+        this.feeling = feeling;
     }
 
     public void updateDiary(String diary) {
