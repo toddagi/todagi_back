@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.dailySummary.rest;
 
+import java.util.List;
 import com.example.emotionbot.api.dailySummary.dto.req.DiaryRequest;
 import com.example.emotionbot.api.dailySummary.dto.res.DiaryResponse;
 import com.example.emotionbot.api.dailySummary.service.DailySummaryService;
@@ -11,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor

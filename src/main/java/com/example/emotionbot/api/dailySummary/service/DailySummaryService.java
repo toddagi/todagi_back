@@ -11,6 +11,7 @@ import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ import java.util.List;
 public class DailySummaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
+
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
         Member member=memberRepository.findById(memberId).orElseThrow(()->new EmotionBotException(FailMessage.CONFLICT_NO_ID));
