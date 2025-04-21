@@ -36,6 +36,23 @@ public class DailySummary {
     @Enumerated(value = EnumType.STRING)
     private Feeling feeling;
 
+    @Column(name="angry", columnDefinition = "double")
+    private float angry;
+
+    @Column(name="annoy", columnDefinition = "double")
+    private float annoy;
+
+    @Column(name="sleepy", columnDefinition = "double")
+    private float sleepy;
+
+    @Column(name="good", columnDefinition = "double")
+    private float good;
+
+    @Column(name="happy", columnDefinition = "double")
+    private float happy;
+
+
+
     @Builder
     public DailySummary(Long id, Member member, LocalDate date, String summary, String diary,Feeling feeling ) {
         this.id = id;
