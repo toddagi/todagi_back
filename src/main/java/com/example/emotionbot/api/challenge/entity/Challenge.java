@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,6 +22,9 @@ public class Challenge {
     @JoinColumn(name = "member_id", columnDefinition = "bigint(20)", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @Column(name = "date", columnDefinition = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "challenge_option", columnDefinition = "varchar(20)", nullable = false)
     @Enumerated(value = EnumType.STRING)

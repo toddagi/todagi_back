@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/diary")
@@ -27,14 +25,16 @@ public class DailySummaryController {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(dailySummaryService.saveDiary(memberId, diaryRequest)));
     }
 
+    @Operation(summary = "일기 조회", description = "월,일별로 일기를 조회합니다")
     @GetMapping
     public ResponseEntity<APISuccessResponse<List<DiaryResponse>>> getDailySummariesByMonth(@MemberId Long memberId,@RequestParam int year, @RequestParam int month) {
         List<DiaryResponse> dailySummaries = dailySummaryService.getDailySummariesByMonth(year,month,memberId);
         if (dailySummaries.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 일기가 없을 경우 204 반환
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(dailySummaries));
     }
+
 
 
 }
