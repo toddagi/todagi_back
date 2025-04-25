@@ -11,6 +11,7 @@ import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.List;
 public class DailySummaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
-    private final CacheService cacheService;
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
         Member member=memberRepository.findById(memberId).orElseThrow(()->new EmotionBotException(FailMessage.CONFLICT_NO_ID));
@@ -37,22 +37,26 @@ public class DailySummaryService {
 
 
     @Transactional
+    @Cacheable(
+            value = "diarySummary",
+            key = "T(String).valueOf(#memberId).concat(':').concat(#year).concat('-').concat(#month)",
+            unless = "#result == null or #result.isEmpty()"
+    )
     public List<DiaryResponse> getDailySummariesByMonth(int year,int month,Long memberId) {
-        if (cacheService.contains(year, month, memberId)) {
-            return cacheService.get(year, month, memberId);
-        }
-
-        List<DiaryResponse> result= dailySummaryRepository.findByMonth(year, month,memberId)
+        return dailySummaryRepository.findByMonth(year, month, memberId)
                 .stream()
-                .map(summary -> new DiaryResponse(
-                        Feeling.toValue(summary.getFeeling().toString()),
-                        summary.getDiary(),
-                        summary.getDate()
+                .map(diary -> new DiaryResponse(
+                        Feeling.toValue(diary.getFeeling().toString()),
+                        diary.getDiary(),
+                        diary.getDate(),
+                        diary.getSummary(),
+                        diary.getAngry(),
+                        diary.getAnnoy(),
+                        diary.getSleepy(),
+                        diary.getGood(),
+                        diary.getHappy()
                 ))
                 .toList();
-
-        cacheService.put(year, month, memberId, result);
-        return result;
     }
 
 

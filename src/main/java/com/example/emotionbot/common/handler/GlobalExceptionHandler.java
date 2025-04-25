@@ -5,6 +5,7 @@ import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.response.APIErrorResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmotionBotException.class)
@@ -123,7 +125,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<APIErrorResponse> handleGeneralException(final Exception exception) {
 
         final FailMessage failMessage = FailMessage.INTERNAL_SERVER_ERROR;
-
+        log.error("err",exception);
         return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), failMessage.getMessage());
     }
 }
