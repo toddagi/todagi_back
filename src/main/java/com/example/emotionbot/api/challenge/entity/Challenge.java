@@ -30,14 +30,15 @@ public class Challenge {
     @Enumerated(value = EnumType.STRING)
     private ChallengeOption challengeOption;
 
-    @Column(name = "stamp_count", columnDefinition = "bigint(20)", nullable = false)
-    private int stampCount;
+    @Column(name = "challenge_status", columnDefinition = "bigint(20)", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private ChallengeStatus challengeStatus;
 
     @Builder
-    public Challenge(Long id, Member member, ChallengeOption challengeOption, int stampCount) {
+    public Challenge(Long id, Member member, ChallengeOption challengeOption, ChallengeStatus challengeStatus) {
         this.id = id;
         this.member = member;
         this.challengeOption = challengeOption;
-        this.stampCount = stampCount;
+        this.challengeStatus = challengeStatus;
     }
 }
