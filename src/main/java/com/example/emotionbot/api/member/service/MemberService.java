@@ -41,6 +41,7 @@ public class MemberService {
                 .talkType(signUpRequest.talkType())
                 .keyboardYn(signUpRequest.keyboardYn())
                 .build();
+
         return memberRepository.save(member).getId();
     }
 
