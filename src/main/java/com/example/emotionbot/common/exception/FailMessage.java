@@ -43,7 +43,8 @@ public enum FailMessage {
 
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50000, "서버 내부 오류가 발생했습니다."),
-    INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다.");
+    INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다."),
+    INTERNAL_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50002, "AI 서버 요청 중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
