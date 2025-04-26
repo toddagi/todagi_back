@@ -1,10 +1,9 @@
 package com.example.emotionbot.api.challenge.service;
 
 import com.example.emotionbot.api.challenge.entity.Challenge;
+import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.entity.ChallengeStatus;
 import com.example.emotionbot.api.challenge.repository.ChallengeRepository;
-import com.example.emotionbot.api.dailySummary.entity.DailySummary;
-import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
@@ -34,7 +33,7 @@ public class ChallengeService {
         challengeRepository.save(challengeAttendance);
 
         Challenge challengeCheckEmotion = Challenge.builder()
-                .member(member).challengeOption(CHECK_EMOTION).challengeStatus(START).localDate(date).build();
+                .member(member).challengeOption(CHECK_SUMMARY).challengeStatus(START).localDate(date).build();
         challengeRepository.save(challengeCheckEmotion);
 
         Challenge challengeMissionComplete = Challenge.builder()
@@ -51,8 +50,8 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void completeAttendance(Long memberId){
-        Challenge challenge = challengeRepository.findByMemberIdAndChallengeOption(memberId, ATTENDANCE)
+    public void completeChallenge(Long memberId, ChallengeOption challengeOption) {
+        Challenge challenge = challengeRepository.findByMemberIdAndChallengeOption(memberId, challengeOption)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_CHALLENGE));
         challenge.updateChallengeStatus(ChallengeStatus.REWARD);
     }
