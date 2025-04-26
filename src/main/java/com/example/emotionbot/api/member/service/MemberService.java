@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.member.service;
 
+import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
@@ -27,6 +28,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final RedisTemplate<String, String> redisTemplate;
+    private final ChallengeService challengeService;
 
     public Long createAccount(@Valid SignUpRequest signUpRequest) {
 
@@ -42,7 +44,9 @@ public class MemberService {
                 .keyboardYn(signUpRequest.keyboardYn())
                 .build();
 
-        return memberRepository.save(member).getId();
+        Member savedMember = memberRepository.save(member);
+        challengeService.createChallenge(savedMember.getId());
+        return savedMember.getId();
     }
 
     public LoginResponse login(@Valid LoginRequest loginRequest) {
@@ -62,6 +66,8 @@ public class MemberService {
                 jwtTokenUtil.getRefreshTokenExpirationMillis(),
                 TimeUnit.MILLISECONDS
         );
+
+
         return LoginResponse.of(accessToken, refreshToken);
     }
 

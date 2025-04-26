@@ -32,7 +32,6 @@ public class DiaryService {
                     .diary(diaryRequest.diary())
                     .build();
             return dailySummaryRepository.save(newDailySummary).getId();
-
     }
 
 
