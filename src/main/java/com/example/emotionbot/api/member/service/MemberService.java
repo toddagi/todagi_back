@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.member.service;
 
+import com.example.emotionbot.api.challenge.entity.Challenge;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.example.emotionbot.api.challenge.entity.ChallengeOption.ATTENDANCE;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +70,7 @@ public class MemberService {
                 TimeUnit.MILLISECONDS
         );
 
-
+        challengeService.completeChallenge(member.getId(), ATTENDANCE);
         return LoginResponse.of(accessToken, refreshToken);
     }
 

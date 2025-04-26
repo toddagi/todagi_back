@@ -24,21 +24,26 @@ public class Challenge {
     private Member member;
 
     @Column(name = "date", columnDefinition = "date", nullable = false)
-    private LocalDate date;
+    private LocalDate localDate;
 
     @Column(name = "challenge_option", columnDefinition = "varchar(20)", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private ChallengeOption challengeOption;
 
-    @Column(name = "challenge_status", columnDefinition = "bigint(20)", nullable = false)
+    @Column(name = "challenge_status", columnDefinition = "varchar(20)", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private ChallengeStatus challengeStatus;
 
     @Builder
-    public Challenge(Long id, Member member, ChallengeOption challengeOption, ChallengeStatus challengeStatus) {
+    public Challenge(Long id, Member member, ChallengeOption challengeOption, ChallengeStatus challengeStatus, LocalDate localDate) {
         this.id = id;
         this.member = member;
         this.challengeOption = challengeOption;
         this.challengeStatus = challengeStatus;
+        this.localDate = localDate;
+    }
+
+    public void updateChallengeStatus(ChallengeStatus status) {
+        this.challengeStatus = status;
     }
 }
