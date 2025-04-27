@@ -1,5 +1,7 @@
 package com.example.emotionbot.api.dailySummary.service;
 
+import com.example.emotionbot.api.challenge.entity.ChallengeOption;
+import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.dailySummary.dto.req.DiaryRequest;
 import com.example.emotionbot.api.dailySummary.dto.res.DiaryResponse;
 import com.example.emotionbot.api.dailySummary.entity.DailySummary;
@@ -21,9 +23,12 @@ import java.util.List;
 public class DiaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
+    private final ChallengeService challengeService;
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
         Member member=memberRepository.findById(memberId).orElseThrow(()->new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+
+        challengeService.completeChallenge(memberId, ChallengeOption.DIARY);
 
         DailySummary newDailySummary = DailySummary.builder()
                     .member(member)
