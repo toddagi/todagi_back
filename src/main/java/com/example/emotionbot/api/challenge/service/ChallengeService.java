@@ -93,7 +93,7 @@ public class ChallengeService {
         throw new EmotionBotException(FailMessage.NOT_FOUND);
     }
 
-    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     @Transactional
     public void resetChallengesAt3AM() {
         resetAllChallengesToStart();
@@ -101,6 +101,12 @@ public class ChallengeService {
 
     @Transactional
     public void resetAllChallengesToStart() {
+        List<Long> allMemberId = memberRepository.findAllIds();
+
+        for( Long memberId : allMemberId){
+            updateMissionComplete(memberId);
+        }
+
         List<Challenge> allChallenges = challengeRepository.findAllWithMember();
         for (Challenge challenge : allChallenges) {
             if (challenge.getChallengeStatus() == ChallengeStatus.REWARD) {
@@ -110,4 +116,23 @@ public class ChallengeService {
             challenge.updateChallengeStatus(ChallengeStatus.START);
         }
     }
+
+    @Transactional
+    public void updateMissionComplete(Long memberId) {
+        List<Challenge> challenges = challengeRepository.findAllByMemberId(memberId);
+
+        Challenge missionCompleteChallenge = challenges.stream()
+                .filter(challenge -> challenge.getChallengeOption() == ChallengeOption.MISSION_COMPLETE)
+                .findFirst()
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_CHALLENGE));
+
+        boolean allOtherChallengesNotStart = challenges.stream()
+                .filter(challenge -> challenge.getChallengeOption() != ChallengeOption.MISSION_COMPLETE)
+                .allMatch(challenge -> challenge.getChallengeStatus() != ChallengeStatus.START);
+
+        if (allOtherChallengesNotStart && missionCompleteChallenge.getChallengeStatus() == ChallengeStatus.START) {
+            missionCompleteChallenge.updateChallengeStatus(ChallengeStatus.REWARD);
+        }
+    }
+
 }
