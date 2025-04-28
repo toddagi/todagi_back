@@ -24,19 +24,20 @@ public class DiaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
     private final ChallengeService challengeService;
+
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
-        Member member=memberRepository.findById(memberId).orElseThrow(()->new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         challengeService.completeChallenge(memberId, ChallengeOption.DIARY);
 
         DailySummary newDailySummary = DailySummary.builder()
-                    .member(member)
-                    .feeling(Feeling.fromValue(diaryRequest.feeling()))
-                    .date(diaryRequest.date())
-                    .diary(diaryRequest.diary())
-                    .build();
-            return dailySummaryRepository.save(newDailySummary).getId();
+                .member(member)
+                .feeling(Feeling.fromValue(diaryRequest.feeling()))
+                .date(diaryRequest.date())
+                .diary(diaryRequest.diary())
+                .build();
+        return dailySummaryRepository.save(newDailySummary).getId();
     }
 
 
@@ -46,7 +47,7 @@ public class DiaryService {
             key = "T(String).valueOf(#memberId).concat(':').concat(#year).concat('-').concat(#month)",
             unless = "#result == null or #result.isEmpty()"
     )
-    public List<DiaryResponse> getDailySummariesByMonth(int year,int month,Long memberId) {
+    public List<DiaryResponse> getDailySummariesByMonth(int year, int month, Long memberId) {
         return dailySummaryRepository.findByMonth(year, month, memberId)
                 .stream()
                 .map(diary -> new DiaryResponse(

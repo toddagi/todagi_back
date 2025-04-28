@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.challenge.service;
 
+import com.example.emotionbot.api.challenge.dto.RewardChallengeRequest;
 import com.example.emotionbot.api.challenge.dto.checkChallengeResponse;
 import com.example.emotionbot.api.challenge.entity.Challenge;
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
@@ -11,6 +12,7 @@ import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,29 +28,21 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     @Transactional
-    public void createChallenge(Long memberId){
-        Member member=memberRepository.findById(memberId).orElseThrow(()->new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+    public void createChallenge(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+
         LocalDate date = LocalDate.now();
 
-        Challenge challengeAttendance = Challenge.builder()
-            .member(member).challengeOption(ATTENDANCE).challengeStatus(START).localDate(date).build();
-        challengeRepository.save(challengeAttendance);
+        List<Challenge> challenges = List.of(
+                Challenge.builder().member(member).challengeOption(ATTENDANCE).challengeStatus(START).localDate(date).build(),
+                Challenge.builder().member(member).challengeOption(CHECK_SUMMARY).challengeStatus(START).localDate(date).build(),
+                Challenge.builder().member(member).challengeOption(MISSION_COMPLETE).challengeStatus(START).localDate(date).build(),
+                Challenge.builder().member(member).challengeOption(CHAT).challengeStatus(START).localDate(date).build(),
+                Challenge.builder().member(member).challengeOption(DIARY).challengeStatus(START).localDate(date).build()
+        );
 
-        Challenge challengeCheckEmotion = Challenge.builder()
-                .member(member).challengeOption(CHECK_SUMMARY).challengeStatus(START).localDate(date).build();
-        challengeRepository.save(challengeCheckEmotion);
-
-        Challenge challengeMissionComplete = Challenge.builder()
-                .member(member).challengeOption(MISSION_COMPLETE).challengeStatus(START).localDate(date).build();
-        challengeRepository.save(challengeMissionComplete);
-
-        Challenge challengeChat = Challenge.builder()
-                .member(member).challengeOption(CHAT).challengeStatus(START).localDate(date).build();
-        challengeRepository.save(challengeChat);
-
-        Challenge challengeDairy = Challenge.builder()
-                .member(member).challengeOption(DIARY).challengeStatus(START).localDate(date).build();
-        challengeRepository.save(challengeDairy);
+        challengeRepository.saveAll(challenges);
     }
 
     @Transactional
@@ -77,7 +71,8 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void rewardChallenge(Long memberId, int challengeNum) {
+    public void rewardChallenge(Long memberId, RewardChallengeRequest rewardChallengeRequest) {
+        int challengeNum = rewardChallengeRequest.challengeNum();
         ChallengeOption challengeOption = findChallengeOptionByNum(challengeNum);
 
         Challenge challenge = challengeRepository.findByMemberIdAndChallengeOption(memberId, challengeOption)
@@ -98,4 +93,21 @@ public class ChallengeService {
         throw new EmotionBotException(FailMessage.NOT_FOUND);
     }
 
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
+    @Transactional
+    public void resetChallengesAt3AM() {
+        resetAllChallengesToStart();
+    }
+
+    @Transactional
+    public void resetAllChallengesToStart() {
+        List<Challenge> allChallenges = challengeRepository.findAllWithMember();
+        for (Challenge challenge : allChallenges) {
+            if (challenge.getChallengeStatus() == ChallengeStatus.REWARD) {
+                Member member = challenge.getMember();
+                member.updateClover(challenge.getChallengeOption().getCoin());
+            }
+            challenge.updateChallengeStatus(ChallengeStatus.START);
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.emotionbot.api.member.service;
 
-import com.example.emotionbot.api.challenge.entity.Challenge;
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
@@ -19,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.concurrent.TimeUnit;
 
 @Service
