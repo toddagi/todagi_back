@@ -125,7 +125,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<APIErrorResponse> handleGeneralException(final Exception exception) {
 
         final FailMessage failMessage = FailMessage.INTERNAL_SERVER_ERROR;
-        log.error("err",exception);
+        log.error("err", exception);
         return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), failMessage.getMessage());
     }
 }

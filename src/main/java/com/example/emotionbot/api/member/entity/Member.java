@@ -48,8 +48,8 @@ public class Member {
         this.talkType = talkType;
     }
 
-    public void updateClover(int addClover){
-        this.clover +=addClover;
+    public void updateClover(int addClover) {
+        this.clover += addClover;
     }
 }
 

@@ -32,29 +32,28 @@ public class DailySummary {
     @Column(name = "diary", columnDefinition = "varchar(100)", nullable = true)
     private String diary;
 
-    @Column(name="feeling")
+    @Column(name = "feeling")
     @Enumerated(value = EnumType.STRING)
     private Feeling feeling;
 
-    @Column(name="angry", columnDefinition = "double")
+    @Column(name = "angry", columnDefinition = "double")
     private float angry;
 
-    @Column(name="annoy", columnDefinition = "double")
+    @Column(name = "annoy", columnDefinition = "double")
     private float annoy;
 
-    @Column(name="sleepy", columnDefinition = "double")
+    @Column(name = "sleepy", columnDefinition = "double")
     private float sleepy;
 
-    @Column(name="good", columnDefinition = "double")
+    @Column(name = "good", columnDefinition = "double")
     private float good;
 
-    @Column(name="happy", columnDefinition = "double")
+    @Column(name = "happy", columnDefinition = "double")
     private float happy;
 
 
-
     @Builder
-    public DailySummary(Long id, Member member, LocalDate date, String summary, String diary,Feeling feeling ) {
+    public DailySummary(Long id, Member member, LocalDate date, String summary, String diary, Feeling feeling) {
         this.id = id;
         this.member = member;
         this.date = date;
@@ -64,6 +63,6 @@ public class DailySummary {
     }
 
     public void updateDiary(String diary) {
-        this.diary=diary;
+        this.diary = diary;
     }
 }

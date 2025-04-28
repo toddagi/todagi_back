@@ -31,6 +31,7 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int port;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
@@ -56,6 +57,7 @@ public class RedisConfig {
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         return objectMapper;
     }
+
     @Bean
     public RedisCacheManager redisCacheManager(ObjectMapper redisObjectMapper) {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
