@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DailySummaryService {
+public class DiaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
     @Transactional
@@ -38,7 +38,7 @@ public class DailySummaryService {
 
     @Transactional
     @Cacheable(
-            value = "diarySummary",
+            value = "diary",
             key = "T(String).valueOf(#memberId).concat(':').concat(#year).concat('-').concat(#month)",
             unless = "#result == null or #result.isEmpty()"
     )
@@ -58,6 +58,4 @@ public class DailySummaryService {
                 ))
                 .toList();
     }
-
-
 }
