@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface DailySummaryRepository extends JpaRepository<DailySummary, Long> {
     @Query("SELECT ds FROM DailySummary ds WHERE MONTH(ds.date) = :month AND YEAR(ds.date)=:year AND ds.member.id = :memberId")
-    List<DailySummary> findByMonth(int year,int month,Long memberId);
+    List<DailySummary> findByMonth(int year, int month, Long memberId);
 }

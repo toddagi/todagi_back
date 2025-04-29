@@ -38,11 +38,13 @@ public enum FailMessage {
     CONFLICT_DUPLICATE_ID(HttpStatus.CONFLICT, 40902, "이미 존재하는 아이디입니다."),
     CONFLICT_WRONG_PW(HttpStatus.CONFLICT, 40903, "비밀번호가 일치하지 않습니다"),
     CONFLICT_NO_ID(HttpStatus.CONFLICT, 40904, "존재하지 않는 아이디입니다"),
+    CONFLICT_NO_CHALLENGE(HttpStatus.CONFLICT, 40905, "존재하지 않는 챌린지입니다"),
 
 
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50000, "서버 내부 오류가 발생했습니다."),
-    INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다.");
+    INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다."),
+    INTERNAL_AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50002, "AI 서버 요청 중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;

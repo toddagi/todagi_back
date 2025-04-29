@@ -23,7 +23,7 @@ public class Chat {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(name = "message", columnDefinition = "varchar(100)", nullable = false)
+    @Column(name = "message", columnDefinition = "varchar(1000)", nullable = false)
     private String message;
 
     @Column(name = "sender", columnDefinition = "varchar(10)", nullable = false)

@@ -47,5 +47,9 @@ public class Member {
         this.keyboardYn = keyboardYn;
         this.talkType = talkType;
     }
+
+    public void updateClover(int addClover) {
+        this.clover += addClover;
+    }
 }
 
