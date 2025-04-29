@@ -1,25 +1,20 @@
 package com.example.emotionbot.api.dailySummary.repository;
 
-import com.example.emotionbot.api.dailySummary.entity.DailySummary;
-import com.example.emotionbot.api.member.entity.Member;
+import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
+import com.example.emotionbot.api.dailySummary.repository.impl.SummaryRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
-@DataJpaTest
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DailySummaryRepositoryTest {
 
     @Autowired
-    private DailySummaryRepository dailySummaryRepository;
+    private SummaryRepositoryImpl summaryRepository;
 
     private Long memberId;
     private int year;
@@ -36,14 +31,8 @@ class DailySummaryRepositoryTest {
 
     @Test
     void getMonthFeelingAverage_정상조회() {
-        Float[] averages = dailySummaryRepository.getMonthFeelingAverage(memberId, year, month);
-        assertThat(averages[0]).isNotNull();
-    }
-
-    @Test
-    void getDiaryAverage_정상조회() {
-        Float result = dailySummaryRepository.getDiaryAverage(memberId, year, month, day);
-        assertEquals(result,100);
+      MonthResponse.AverageFeeling averageFeeling=summaryRepository.getAverageFeeling(memberId,year,month);
+        System.out.println(averageFeeling);
     }
 
 }

@@ -10,19 +10,10 @@ import java.util.List;
 
 @Repository
 public interface DailySummaryRepository extends JpaRepository<DailySummary, Long> {
+
     @Query("SELECT ds FROM DailySummary ds WHERE MONTH(ds.date) = :month AND YEAR(ds.date)=:year AND ds.member.id = :memberId")
     List<DailySummary> findByMonth(int year,int month,Long memberId);
 
-    @Query("""
-        SELECT AVG(ds.angry), AVG(ds.annoy), AVG(ds.sleepy), AVG(ds.good), AVG(ds.happy)
-        FROM DailySummary ds
-        WHERE ds.member.id = :memberId
-          AND YEAR(ds.date) = :year
-          AND MONTH(ds.date) = :month
-    """)
-    Float[] getMonthFeelingAverage(@Param("memberId") Long memberId,
-                                        @Param("year") int year,
-                                        @Param("month") int month);
 
     @Query("""
     SELECT 
