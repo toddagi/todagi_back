@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +16,7 @@ public class SummaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final SummaryRepositoryImpl summaryRepository;
     private final DateFormatUtil dateFormatUtil;
+
     public MonthResponse getMonthSummary(Long memberId, String date) {
         int year=dateFormatUtil.yearFormat(date);
         int month=dateFormatUtil.monthFormat(date);
@@ -40,10 +40,7 @@ public class SummaryService {
     }
 
     private List<MonthResponse.DailyFeeling> getDailyFeelings(Long memberId, int year, int month) {
-        return dailySummaryRepository.findByMonth(month, year, memberId)
-                .stream()
-                .map(ds -> new MonthResponse.DailyFeeling(ds.getDate(), ds.getFeeling()))
-                .collect(Collectors.toList());
+        return summaryRepository.getDailyFeeling(memberId, year, month);
     }
 
 

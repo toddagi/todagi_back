@@ -4,9 +4,12 @@ import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
 import com.example.emotionbot.api.dailySummary.repository.SummaryRepositoryCustom;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,5 +42,24 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
                 result.get(ds.good.avg()),
                 result.get(ds.happy.avg())
         );
+    }
+
+    @Override
+    public List<MonthResponse.DailyFeeling> getDailyFeeling(Long memberId, int year, int month) {
+        QDailySummary ds = QDailySummary.dailySummary;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        MonthResponse.DailyFeeling.class,
+                        ds.date,
+                        ds.feeling
+                ))
+                .from(ds)
+                .where(
+                        ds.member.id.eq(memberId),
+                        ds.date.year().eq(year),
+                        ds.date.month().eq(month)
+                )
+                .fetch();
     }
 }
