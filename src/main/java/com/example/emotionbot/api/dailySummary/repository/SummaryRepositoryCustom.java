@@ -13,6 +13,7 @@ public interface SummaryRepositoryCustom {
     List<MonthResponse.DailyFeeling> getDailyFeeling(Long memberId, int year, int month);
 
     List<DayResponse.WeeklyFeeling> getWeeklyFeeling(Long memberId, LocalDate date);
+    DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date);
 
 
 }

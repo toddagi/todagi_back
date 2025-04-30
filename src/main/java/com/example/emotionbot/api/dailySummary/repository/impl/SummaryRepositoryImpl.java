@@ -87,6 +87,31 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
                 .orderBy(ds.date.asc())
                 .fetch();
     }
+
+    @Override
+    public DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date) {
+        QDailySummary ds = QDailySummary.dailySummary;
+
+        DayResponse.EmotionScores result = queryFactory
+                .select(Projections.constructor(
+                        DayResponse.EmotionScores.class,
+                        ds.angry,
+                        ds.annoy,
+                        ds.sleepy,
+                        ds.good,
+                        ds.happy
+                ))
+                .from(ds)
+                .where(
+                        ds.member.id.eq(memberId),
+                        ds.date.eq(date)
+                )
+                .fetchOne();
+
+        return result != null
+                ? result
+                : new DayResponse.EmotionScores(0f, 0f, 0f, 0f, 0f);
+    }
 }
 
 
