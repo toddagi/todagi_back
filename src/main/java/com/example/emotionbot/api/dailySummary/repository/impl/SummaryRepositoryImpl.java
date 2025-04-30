@@ -67,10 +67,8 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
     }
 
     @Override
-    public List<DayResponse.WeeklyFeeling> getWeeklyFeeling(Long memberId, int year, int month, int day) {
+    public List<DayResponse.WeeklyFeeling> getWeeklyFeeling(Long memberId, LocalDate date) {
         QDailySummary ds = QDailySummary.dailySummary;
-
-        LocalDate date = LocalDate.of(year, month, day);
 
         LocalDate startOfWeek = date.with(DayOfWeek.MONDAY);
         LocalDate endOfWeek = startOfWeek.plusDays(6);

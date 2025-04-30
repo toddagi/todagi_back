@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -27,6 +29,7 @@ class DailySummaryRepositoryTest {
     private int year;
     private int month;
     private int day;
+    private LocalDate date;
 
     @BeforeEach
     void setUp() {
@@ -34,6 +37,7 @@ class DailySummaryRepositoryTest {
         year = 2025;
         month = 12;
         day = 10;
+        date = LocalDate.of(year, month, day);
     }
 
     @Test
@@ -50,7 +54,7 @@ class DailySummaryRepositoryTest {
 
     @Test
     void 주차별_감정을_반환한다(){
-        assertThat(summaryRepository.getWeeklyFeeling(memberId,year,month,day)).size().isEqualTo(7);
+        assertThat(summaryRepository.getWeeklyFeeling(memberId,date)).size().isEqualTo(7);
     }
 
 }
