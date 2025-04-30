@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.dailySummary.service;
 
+import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.repository.DailySummaryRepository;
 import com.example.emotionbot.api.dailySummary.repository.impl.SummaryRepositoryImpl;
@@ -41,6 +42,15 @@ public class SummaryService {
 
     private List<MonthResponse.DailyFeeling> getDailyFeelings(Long memberId, int year, int month) {
         return summaryRepository.getDailyFeeling(memberId, year, month);
+    }
+
+    public DayResponse getDaySummary(Long memberId, String date) {
+        LocalDate formatDate=LocalDate.parse(date);
+
+        List<DayResponse. WeeklyFeeling> weeklyFeelingList=summaryRepository.getWeeklyFeeling(memberId,formatDate);
+        DayResponse. EmotionScores emotionScores=summaryRepository.getEmotionScores(memberId,formatDate);
+
+        return new DayResponse(weeklyFeelingList, emotionScores);
     }
 
 

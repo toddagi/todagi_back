@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.dailySummary.rest;
 
+import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.service.SummaryService;
 import com.example.emotionbot.common.resolver.MemberId;
@@ -20,6 +21,14 @@ public class SummaryController {
     public ResponseEntity<APISuccessResponse<MonthResponse>> getMonthSummary(@MemberId Long memberId, @RequestParam String date){
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(summaryService.getMonthSummary(memberId,date)));
     }
+
+    @Operation(summary = "일 별 통계 조회", description = "일 별로 통계를 조회합니다")
+    @GetMapping("/day")
+    public ResponseEntity<APISuccessResponse<DayResponse>> getDaySummary(@MemberId Long memberId, @RequestParam String date){
+        return ResponseEntity.ok(APISuccessResponse.ofSuccess(summaryService.getDaySummary(memberId,date)));
+    }
+
+
 
 
 
