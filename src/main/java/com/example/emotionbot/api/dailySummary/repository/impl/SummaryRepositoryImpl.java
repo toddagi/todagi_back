@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.dailySummary.repository.impl;
 
+import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
 import com.example.emotionbot.api.dailySummary.repository.SummaryRepositoryCustom;
@@ -9,6 +10,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -62,4 +65,30 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
                 )
                 .fetch();
     }
+
+    @Override
+    public List<DayResponse.WeeklyFeeling> getWeeklyFeeling(Long memberId, int year, int month, int day) {
+        QDailySummary ds = QDailySummary.dailySummary;
+
+        LocalDate date = LocalDate.of(year, month, day);
+
+        LocalDate startOfWeek = date.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        return queryFactory
+                .select(Projections.constructor(
+                        DayResponse.WeeklyFeeling.class,
+                        ds.date,
+                        ds.feeling
+                ))
+                .from(ds)
+                .where(
+                        ds.member.id.eq(memberId),
+                        ds.date.between(startOfWeek, endOfWeek)
+                )
+                .orderBy(ds.date.asc())
+                .fetch();
+    }
 }
+
+
