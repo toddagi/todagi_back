@@ -21,6 +21,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -54,11 +56,13 @@ public class ChatController {
 
         // AI 서버 호출 및 응답 처리
         ChatSendRequestToAI chatSendRequestToAI = new ChatSendRequestToAI(chatSendRequest.memberId(),chatSendRequest.message(), member.getTalkType().getTalkTypeString());
-        String aiResponseText = aiService.askToAi(chatSendRequestToAI);
+        List<String> aiResponseTexts = aiService.askToAi(chatSendRequestToAI);
 
-        Chat aiMessage = chatService.createChat(member, aiResponseText, Sender.BOT, ChatType.SEND);
-        chatService.saveChat(aiMessage);
-        sendToClient(aiMessage);
+        for (String responseText : aiResponseTexts) {
+            Chat aiMessage = chatService.createChat(member, responseText, Sender.BOT, ChatType.SEND);
+            chatService.saveChat(aiMessage);
+            sendToClient(aiMessage);
+        }
     }
 
     private Member findMember(Long memberId) {
