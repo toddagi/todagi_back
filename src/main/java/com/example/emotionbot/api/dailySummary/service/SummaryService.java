@@ -3,7 +3,7 @@ package com.example.emotionbot.api.dailySummary.service;
 import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.repository.DailySummaryRepository;
-import com.example.emotionbot.api.dailySummary.repository.impl.SummaryRepositoryImpl;
+import com.example.emotionbot.api.dailySummary.repository.SummaryRepository;
 import com.example.emotionbot.common.utils.DateFormatUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SummaryService {
     private final DailySummaryRepository dailySummaryRepository;
-    private final SummaryRepositoryImpl summaryRepository;
+    private final SummaryRepository summaryRepository;
     private final DateFormatUtil dateFormatUtil;
 
     public MonthResponse getMonthSummary(Long memberId, String date) {

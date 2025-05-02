@@ -1,9 +1,8 @@
-package com.example.emotionbot.api.dailySummary.repository.impl;
+package com.example.emotionbot.api.dailySummary.repository;
 
 import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
-import com.example.emotionbot.api.dailySummary.repository.SummaryRepositoryCustom;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,11 +15,10 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
+public class SummaryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
     public MonthResponse.AverageFeeling getAverageFeeling(Long memberId, int year, int month) {
         QDailySummary ds = QDailySummary.dailySummary;
 
@@ -47,7 +45,7 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
         );
     }
 
-    @Override
+
     public List<MonthResponse.DailyFeeling> getDailyFeeling(Long memberId, int year, int month) {
         QDailySummary ds = QDailySummary.dailySummary;
 
@@ -66,7 +64,7 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
                 .fetch();
     }
 
-    @Override
+
     public List<DayResponse.WeeklyFeeling> getWeeklyFeeling(Long memberId, LocalDate date) {
         QDailySummary ds = QDailySummary.dailySummary;
 
@@ -88,7 +86,7 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
                 .fetch();
     }
 
-    @Override
+
     public DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date) {
         QDailySummary ds = QDailySummary.dailySummary;
 
