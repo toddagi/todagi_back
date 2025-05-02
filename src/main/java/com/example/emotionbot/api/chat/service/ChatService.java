@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class ChatService {
                 .message(message)
                 .sender(sender)
                 .type(type)
-                .sendTime(LocalDateTime.now())
+                .sendTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
     }
 }
