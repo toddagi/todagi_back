@@ -24,7 +24,7 @@ public class SummaryRepositoryImpl implements SummaryRepositoryCustom {
     public MonthResponse.AverageFeeling getAverageFeeling(Long memberId, int year, int month) {
         QDailySummary ds = QDailySummary.dailySummary;
 
-     Tuple result=queryFactory.select(
+        Tuple result = queryFactory.select(
                         ds.angry.avg(),
                         ds.annoy.avg(),
                         ds.sleepy.avg(),

@@ -19,8 +19,8 @@ public class SummaryService {
     private final DateFormatUtil dateFormatUtil;
 
     public MonthResponse getMonthSummary(Long memberId, String date) {
-        int year=dateFormatUtil.yearFormat(date);
-        int month=dateFormatUtil.monthFormat(date);
+        int year = dateFormatUtil.yearFormat(date);
+        int month = dateFormatUtil.monthFormat(date);
 
         MonthResponse.AverageFeeling averageFeeling = getAverageFeeling(memberId, year, month);
         Float diaryAvg = getDiaryAverage(memberId, year, month);
@@ -30,7 +30,7 @@ public class SummaryService {
     }
 
     private MonthResponse.AverageFeeling getAverageFeeling(Long memberId, int year, int month) {
-       return summaryRepository.getAverageFeeling(memberId, year, month);
+        return summaryRepository.getAverageFeeling(memberId, year, month);
     }
 
     private Float getDiaryAverage(Long memberId, int year, int month) {
@@ -45,10 +45,10 @@ public class SummaryService {
     }
 
     public DayResponse getDaySummary(Long memberId, String date) {
-        LocalDate formatDate=LocalDate.parse(date);
+        LocalDate formatDate = LocalDate.parse(date);
 
-        List<DayResponse. WeeklyFeeling> weeklyFeelingList=summaryRepository.getWeeklyFeeling(memberId,formatDate);
-        DayResponse. EmotionScores emotionScores=summaryRepository.getEmotionScores(memberId,formatDate);
+        List<DayResponse.WeeklyFeeling> weeklyFeelingList = summaryRepository.getWeeklyFeeling(memberId, formatDate);
+        DayResponse.EmotionScores emotionScores = summaryRepository.getEmotionScores(memberId, formatDate);
 
         return new DayResponse(weeklyFeelingList, emotionScores);
     }

@@ -14,10 +14,12 @@ public record MonthResponse(AverageFeeling averageFeelings,
             double sleepy,
             double good,
             double happy
-    ) {}
+    ) {
+    }
 
     public record DailyFeeling(
             LocalDate date,
             Feeling feeling
-    ) {}
+    ) {
+    }
 }

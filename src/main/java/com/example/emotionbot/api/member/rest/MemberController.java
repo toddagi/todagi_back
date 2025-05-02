@@ -1,10 +1,12 @@
 package com.example.emotionbot.api.member.rest;
 
+import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
 import com.example.emotionbot.api.member.dto.response.LogoutResponse;
 import com.example.emotionbot.api.member.service.MemberService;
+import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -46,5 +48,12 @@ public class MemberController {
     @PostMapping("/logout")
     public ResponseEntity<APISuccessResponse<LogoutResponse>> logout(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(memberService.logOut(refreshToken)));
+    }
+
+    @Operation(summary = "클로버 소모")
+    @PostMapping("/consumeClover")
+    public ResponseEntity<APISuccessResponse<Long>> consumeClover(@MemberId Long memberId, @RequestBody ConsumeCloverRequest consumeCloverRequest) {
+        memberService.consumeClover(memberId, consumeCloverRequest);
+        return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
     }
 }

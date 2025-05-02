@@ -1,18 +1,6 @@
 package com.example.emotionbot.api.dailySummary.service;
 
-import com.example.emotionbot.api.dailySummary.dto.res.DiaryResponse;
-import com.example.emotionbot.api.dailySummary.repository.DailySummaryRepository;
-import com.example.emotionbot.api.member.repository.MemberRepository;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class DiaryServiceTest {
