@@ -30,6 +30,7 @@ public class AiService {
             ResponseEntity<String> response = restTemplate.postForEntity(aiServerUrl, request, String.class);
             return response.getBody();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
         }
     }
