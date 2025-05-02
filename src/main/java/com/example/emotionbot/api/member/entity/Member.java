@@ -51,5 +51,6 @@ public class Member {
     public void updateClover(int addClover) {
         this.clover += addClover;
     }
+    public void consumeClover(int deleteClover){this.clover -=deleteClover;}
 }
 
