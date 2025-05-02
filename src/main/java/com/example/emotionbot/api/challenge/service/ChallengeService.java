@@ -103,7 +103,7 @@ public class ChallengeService {
     public void resetAllChallengesToStart() {
         List<Long> allMemberId = memberRepository.findAllIds();
 
-        for( Long memberId : allMemberId){
+        for (Long memberId : allMemberId) {
             updateMissionComplete(memberId);
         }
 

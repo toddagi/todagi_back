@@ -11,10 +11,10 @@ public class DateFormatUtil {
     }
 
     public int monthFormat(String date) {
-       return Integer.parseInt(dateFormat(date)[1]);
+        return Integer.parseInt(dateFormat(date)[1]);
     }
 
-    private String[] dateFormat(String date){
+    private String[] dateFormat(String date) {
         return date.split("-");
     }
 

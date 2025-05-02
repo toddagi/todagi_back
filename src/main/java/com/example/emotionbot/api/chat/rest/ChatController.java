@@ -55,7 +55,7 @@ public class ChatController {
         sendToClient(userMessage);
 
         // AI 서버 호출 및 응답 처리
-        ChatSendRequestToAI chatSendRequestToAI = new ChatSendRequestToAI(chatSendRequest.memberId(),chatSendRequest.message(), member.getTalkType().getTalkTypeString());
+        ChatSendRequestToAI chatSendRequestToAI = new ChatSendRequestToAI(chatSendRequest.memberId(), chatSendRequest.message(), member.getTalkType().getTalkTypeString());
         List<String> aiResponseTexts = aiService.askToAi(chatSendRequestToAI);
 
         for (String responseText : aiResponseTexts) {

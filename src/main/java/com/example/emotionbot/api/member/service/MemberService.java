@@ -2,6 +2,7 @@ package com.example.emotionbot.api.member.service;
 
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
+import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
@@ -95,5 +96,11 @@ public class MemberService {
 
         return new LogoutResponse(loginId + "님 로그아웃되었습니다");
 
+    }
+
+    public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.consumeClover(consumeCloverRequest.deleteClover());
     }
 }

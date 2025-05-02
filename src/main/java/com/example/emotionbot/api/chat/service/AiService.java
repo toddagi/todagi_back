@@ -1,6 +1,5 @@
 package com.example.emotionbot.api.chat.service;
 
-import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.api.chat.dto.request.ChatSendResponse;
 import com.example.emotionbot.common.exception.EmotionBotException;
@@ -34,7 +33,7 @@ public class AiService {
             ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
                     aiServerUrl,
                     request,
-                   ChatSendResponse.class
+                    ChatSendResponse.class
             );
 
             return response.getBody().message();
