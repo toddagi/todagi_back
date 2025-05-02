@@ -3,6 +3,7 @@ package com.example.emotionbot.api.chat.rest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
+import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
@@ -52,7 +53,8 @@ public class ChatController {
         sendToClient(userMessage);
 
         // AI 서버 호출 및 응답 처리
-        String aiResponseText = aiService.askToAi(chatSendRequest);
+        ChatSendRequestToAI chatSendRequestToAI = new ChatSendRequestToAI(chatSendRequest.memberId(),chatSendRequest.message(), member.getTalkType().getTalkTypeString());
+        String aiResponseText = aiService.askToAi(chatSendRequestToAI);
 
         Chat aiMessage = chatService.createChat(member, aiResponseText, Sender.BOT, ChatType.SEND);
         chatService.saveChat(aiMessage);

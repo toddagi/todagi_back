@@ -1,6 +1,7 @@
 package com.example.emotionbot.api.chat.service;
 
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
+import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class AiService {
     @Value("${spring.ai.server.url}")
     private String aiServerUrl;
 
-    public String askToAi(ChatSendRequest chatSendRequest) {
+    public String askToAi(ChatSendRequestToAI chatSendRequestToAI) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<ChatSendRequest> request = new HttpEntity<>(chatSendRequest, headers);
+            HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(chatSendRequestToAI, headers);
 
             ResponseEntity<String> response = restTemplate.postForEntity(aiServerUrl, request, String.class);
             return response.getBody();
