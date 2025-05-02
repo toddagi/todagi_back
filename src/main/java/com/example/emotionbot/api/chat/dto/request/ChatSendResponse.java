@@ -1,12 +1,11 @@
 package com.example.emotionbot.api.chat.dto.request;
 
-import com.example.emotionbot.api.chat.entity.Sender;
 import lombok.Builder;
+
+import java.util.List;
 
 @Builder
 public record ChatSendResponse(
-        Long memberId,
-        String message,
-        Sender sender
+        List<String> message
 ) {
 }
