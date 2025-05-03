@@ -39,6 +39,8 @@ public enum FailMessage {
     CONFLICT_WRONG_PW(HttpStatus.CONFLICT, 40903, "비밀번호가 일치하지 않습니다"),
     CONFLICT_NO_ID(HttpStatus.CONFLICT, 40904, "존재하지 않는 아이디입니다"),
     CONFLICT_NO_CHALLENGE(HttpStatus.CONFLICT, 40905, "존재하지 않는 챌린지입니다"),
+    CONFLICT_NO_CLOVER(HttpStatus.CONFLICT, 40906, "더이상 소모할 클로버가 없습니다."),
+
 
 
     //500
