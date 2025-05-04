@@ -3,6 +3,7 @@ package com.example.emotionbot.api.chat.rest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
+import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
@@ -19,6 +20,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -52,11 +55,14 @@ public class ChatController {
         sendToClient(userMessage);
 
         // AI 서버 호출 및 응답 처리
-        String aiResponseText = aiService.askToAi(chatSendRequest);
+        ChatSendRequestToAI chatSendRequestToAI = new ChatSendRequestToAI(chatSendRequest.memberId(),chatSendRequest.message(), member.getTalkType().getTalkTypeString());
+        List<String> aiResponseTexts = aiService.askToAi(chatSendRequestToAI);
 
-        Chat aiMessage = chatService.createChat(member, aiResponseText, Sender.BOT, ChatType.SEND);
-        chatService.saveChat(aiMessage);
-        sendToClient(aiMessage);
+        for (String responseText : aiResponseTexts) {
+            Chat aiMessage = chatService.createChat(member, responseText, Sender.BOT, ChatType.SEND);
+            chatService.saveChat(aiMessage);
+            sendToClient(aiMessage);
+        }
     }
 
     private Member findMember(Long memberId) {
