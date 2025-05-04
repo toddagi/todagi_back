@@ -33,7 +33,6 @@ class DailySummaryRepositoryTest {
     @Autowired
     private DailySummaryRepository dailySummaryRepository;
 
-    private Long memberId;
     private int year;
     private int month;
     private int day;
@@ -42,7 +41,6 @@ class DailySummaryRepositoryTest {
     Member member;
     @BeforeEach
     void setUp() {
-        memberId = 1L;
         year = 2025;
         month = 12;
         day = 04;
@@ -84,24 +82,25 @@ class DailySummaryRepositoryTest {
 
     @Test
     void getMonthFeelingAverage_정상조회() {
-      MonthResponse.AverageFeeling averageFeeling=summaryRepository.getAverageFeeling(memberId,year,month);
-        System.out.println(averageFeeling);
+      MonthResponse.AverageFeeling averageFeeling=summaryRepository.getAverageFeeling(member.getId(),year,month);
+      assertThat(averageFeeling.angry()).isEqualTo(0);
     }
 
     @Test
     void 날짜별_감정을_반환한다(){
-        assertThat(summaryRepository.getDailyFeeling(memberId,year,month)).isNotNull();
+        assertThat(summaryRepository.getDailyFeeling(member.getId(),year,month)).isNotNull();
     }
 
 
     @Test
     void 주차별_감정을_반환한다(){
-        assertThat(summaryRepository.getWeeklyFeeling(memberId,date)).size().isEqualTo(7);
+        assertThat(summaryRepository.getWeeklyFeeling(member.getId(),date)).size().isEqualTo(7);
     }
 
     @Test
     void 하루_다섯개_감정을_반환한다(){
-        System.out.println(summaryRepository.getEmotionScores(memberId,date));
+        assertThat( summaryRepository.getEmotionScores(member.getId(),date).angry()).isEqualTo(0f);
+
     }
 
 }
