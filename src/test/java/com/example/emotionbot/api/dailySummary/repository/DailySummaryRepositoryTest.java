@@ -57,7 +57,7 @@ class DailySummaryRepositoryTest {
 
         memberRepository.save(member);
 
-        for (int day = 1; day <= 7; day++) {
+        for (int day = 1; day <= 8; day++) {
             DailySummary dailySummary = DailySummary.builder()
                     .member(member)
                     .date(LocalDate.of(2025, 12, day))
@@ -94,7 +94,15 @@ class DailySummaryRepositoryTest {
 
     @Test
     void 주차별_감정을_반환한다(){
+        System.out.println(summaryRepository.getWeeklyFeeling(member.getId(),date));
         assertThat(summaryRepository.getWeeklyFeeling(member.getId(),date)).size().isEqualTo(7);
+    }
+
+    @Test
+    void 데이터가_없을_때_반환하는_개수를_확인(){
+        LocalDate date = LocalDate.of(2025, 12, 8);
+        assertThat(summaryRepository.getWeeklyFeeling(member.getId(),date)).size().isEqualTo(7);
+        assertThat(summaryRepository.getWeeklyFeeling(member.getId(),date).get(6).feeling()).isEqualTo(Feeling.UNKOWN);
     }
 
     @Test
