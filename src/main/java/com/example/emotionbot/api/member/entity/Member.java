@@ -40,14 +40,23 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private TalkType talkType;
 
+    @Column(name = "push_yn", columnDefinition = "varchar(5)", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private PushYn pushYn = PushYn.Y;
+
+    @Column(name = "is_deleted", columnDefinition = "boolean", nullable = false)
+    private boolean is_deleted = false;
+
     @Builder
-    public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, TalkType talkType) {
+    public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, TalkType talkType, PushYn pushYn, boolean is_deleted) {
         this.loginId = loginId;
         this.password = password;
         this.nickname = nickname;
         this.clover = clover;
         this.keyboardYn = keyboardYn;
         this.talkType = talkType;
+        this.pushYn = pushYn;
+        this.is_deleted = is_deleted;
     }
 
     public void updateClover(int addClover) {
