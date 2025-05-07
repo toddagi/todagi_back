@@ -27,7 +27,7 @@ public class DiaryService {
 
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         challengeService.completeChallenge(memberId, ChallengeOption.DIARY);
 

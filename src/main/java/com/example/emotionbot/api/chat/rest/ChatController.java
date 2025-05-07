@@ -75,7 +75,7 @@ public class ChatController {
     }
 
     private Member findMember(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
     }
 
