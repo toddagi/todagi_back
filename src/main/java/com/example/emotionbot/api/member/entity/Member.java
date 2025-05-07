@@ -45,7 +45,7 @@ public class Member {
     private PushYn pushYn = PushYn.Y;
 
     @Column(name = "is_deleted", columnDefinition = "boolean", nullable = false)
-    private boolean is_deleted = false;
+    private boolean isDeleted = false;
 
     @Builder
     public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, TalkType talkType, PushYn pushYn, boolean is_deleted) {
@@ -56,7 +56,7 @@ public class Member {
         this.keyboardYn = keyboardYn;
         this.talkType = talkType;
         this.pushYn = pushYn;
-        this.is_deleted = is_deleted;
+        this.isDeleted = is_deleted;
     }
 
     public void updateClover(int addClover) {
@@ -88,7 +88,19 @@ public class Member {
         try {
             this.keyboardYn = KeyboardYn.valueOf(keyBoardYn);
         } catch (IllegalArgumentException e) {
-            throw new EmotionBotException(FailMessage.CONFLICT_INVALID_KEYBOARD_YN);
+            throw new EmotionBotException(FailMessage.CONFLICT_NO_YN);
+        }
+    }
+
+    public void updateIsDeleted(){
+        this.isDeleted = true;
+    }
+
+    public void updatePushYn(String pushYn){
+        try {
+            this.pushYn = PushYn.valueOf(pushYn);
+        } catch (IllegalArgumentException e) {
+            throw new EmotionBotException(FailMessage.CONFLICT_NO_YN);
         }
     }
 

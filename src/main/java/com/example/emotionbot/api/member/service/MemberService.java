@@ -105,8 +105,21 @@ public class MemberService {
     }
 
     @Transactional
+    public void deleteMember(String refreshToken) {
+        refreshToken = jwtTokenUtil.extractTokenValue(refreshToken);
+        Claims claims = jwtTokenUtil.verify(refreshToken);
+        String loginId = claims.getSubject();
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+
+        member.updateIsDeleted();
+        redisTemplate.delete(loginId);
+    }
+
+    @Transactional
     public MemberInformationResponse getMemberInformation(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(), member.getKeyboardYn(), member.getTalkType());
     }
@@ -114,29 +127,36 @@ public class MemberService {
     @Transactional
     public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest) {
         int deleteClover = consumeCloverRequest.deleteClover();
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.consumeClover(deleteClover);
     }
 
     @Transactional
     public void changeNickname(Long memberId, String nickName) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateNickname(nickName);
     }
 
     @Transactional
     public void changeTalkType(Long memberId, int talkTypeValue) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateTalkType(talkTypeValue);
     }
 
     @Transactional
     public void changeKeyBoardYn(Long memberId, String keyBoardYn) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateKeyBoardYn(keyBoardYn);
+    }
+
+    @Transactional
+    public void changePushYn(Long memberId, String pushYn) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updatePushYn(pushYn);
     }
 }
