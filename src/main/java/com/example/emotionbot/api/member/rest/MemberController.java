@@ -1,8 +1,8 @@
 package com.example.emotionbot.api.member.rest;
 
+import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.api.member.dto.response.MemberInformationResponse;
 import com.example.emotionbot.api.member.service.MemberService;
-import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class MemberController {
     @Operation(summary = "닉네임 설정")
     @PostMapping("/change-nickname")
     public ResponseEntity<APISuccessResponse<Long>> changeNickname(@MemberId Long memberId, @RequestParam String nickName) {
-        memberService.changeNickname(memberId,nickName);
+        memberService.changeNickname(memberId, nickName);
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
     }
 }

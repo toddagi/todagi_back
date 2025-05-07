@@ -42,7 +42,6 @@ public enum FailMessage {
     CONFLICT_NO_CLOVER(HttpStatus.CONFLICT, 40906, "더이상 소모할 클로버가 없습니다."),
 
 
-
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50000, "서버 내부 오류가 발생했습니다."),
     INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다."),

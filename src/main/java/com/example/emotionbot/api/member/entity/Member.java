@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.aop.scope.ScopedProxyUtils;
 
 
 @Getter
@@ -56,13 +55,13 @@ public class Member {
     }
 
     public void consumeClover(int deleteClover) {
-        if(this.clover-deleteClover < 0){
+        if (this.clover - deleteClover < 0) {
             throw new EmotionBotException(FailMessage.CONFLICT_NO_CLOVER);
         }
         this.clover -= deleteClover;
     }
 
-    public void updateNickname(String nickname){
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 }
