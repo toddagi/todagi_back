@@ -1,6 +1,9 @@
 package com.example.emotionbot.api.member.rest;
 
 import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
+import com.example.emotionbot.api.member.dto.request.KeyBoardYnRequest;
+import com.example.emotionbot.api.member.dto.request.NickNameRequest;
+import com.example.emotionbot.api.member.dto.request.TalkTypeValueRequest;
 import com.example.emotionbot.api.member.dto.response.MemberInformationResponse;
 import com.example.emotionbot.api.member.service.MemberService;
 import com.example.emotionbot.common.resolver.MemberId;
@@ -31,10 +34,24 @@ public class MemberController {
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
     }
 
-    @Operation(summary = "닉네임 설정")
-    @PostMapping("/change-nickname")
-    public ResponseEntity<APISuccessResponse<Long>> changeNickname(@MemberId Long memberId, @RequestParam String nickName) {
-        memberService.changeNickname(memberId, nickName);
+    @Operation(summary = "닉네임 변경")
+    @PostMapping("/change/nickname")
+    public ResponseEntity<APISuccessResponse<Long>> changeNickname(@MemberId Long memberId, @RequestBody NickNameRequest nickNameRequest) {
+        memberService.changeNickname(memberId, nickNameRequest.nickName());
+        return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
+    }
+
+    @Operation(summary = "talkType 변경")
+    @PostMapping("/change/talk-type")
+    public ResponseEntity<APISuccessResponse<Long>> changeNickname(@MemberId Long memberId, @RequestBody TalkTypeValueRequest talkTypeValueRequest) {
+        memberService.changeTalkType(memberId, talkTypeValueRequest.talkTypeValue());
+        return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
+    }
+
+    @Operation(summary = "키보드 yn 변경")
+    @PostMapping("/change/keyboard-yn")
+    public ResponseEntity<APISuccessResponse<Long>> changeKeyBoardYn(@MemberId Long memberId, @RequestBody KeyBoardYnRequest keyBoardYnRequest) {
+        memberService.changeKeyBoardYn(memberId, keyBoardYnRequest.keyBoardYn());
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
     }
 }

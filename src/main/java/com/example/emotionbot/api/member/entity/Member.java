@@ -64,5 +64,24 @@ public class Member {
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void updateTalkType(int talkTypeValue){
+        for (TalkType type : TalkType.values()) {
+            if (type.getTalkTypeValue() == talkTypeValue) {
+                this.talkType = type;
+                return;
+            }
+        }
+        throw new EmotionBotException(FailMessage.CONFLICT_NO_TALK_TYPE);
+    }
+
+    public void updateKeyBoardYn(String keyBoardYn) {
+        try {
+            this.keyboardYn = KeyboardYn.valueOf(keyBoardYn);
+        } catch (IllegalArgumentException e) {
+            throw new EmotionBotException(FailMessage.CONFLICT_INVALID_KEYBOARD_YN);
+        }
+    }
+
 }
 

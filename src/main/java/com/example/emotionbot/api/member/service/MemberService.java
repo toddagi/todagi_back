@@ -125,4 +125,18 @@ public class MemberService {
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateNickname(nickName);
     }
+
+    @Transactional
+    public void changeTalkType(Long memberId, int talkTypeValue) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updateTalkType(talkTypeValue);
+    }
+
+    @Transactional
+    public void changeKeyBoardYn(Long memberId, String keyBoardYn) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updateKeyBoardYn(keyBoardYn);
+    }
 }
