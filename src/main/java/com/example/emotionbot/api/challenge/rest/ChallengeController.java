@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @Operation(summary = "챌린지 체크하기", description = "챌린지 현황을 체크합니다.")
-    @PostMapping("/check")
+    @GetMapping("/check")
     public ResponseEntity<APISuccessResponse<List<checkChallengeResponse>>> createDiary(@MemberId Long memberId) {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(challengeService.checkChallenge(memberId)));
     }
