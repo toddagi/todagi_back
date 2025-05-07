@@ -1,7 +1,5 @@
 package com.example.emotionbot.api.dailySummary.service;
 
-import org.springframework.boot.test.context.SpringBootTest;
-
 //@SpringBootTest
 class DiaryServiceTest {
 

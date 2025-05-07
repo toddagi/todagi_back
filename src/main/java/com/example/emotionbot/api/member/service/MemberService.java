@@ -2,6 +2,7 @@ package com.example.emotionbot.api.member.service;
 
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
+import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
@@ -9,7 +10,6 @@ import com.example.emotionbot.api.member.dto.response.LogoutResponse;
 import com.example.emotionbot.api.member.dto.response.MemberInformationResponse;
 import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
-import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.utils.JwtTokenUtil;
@@ -105,14 +105,14 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberInformationResponse getMemberInformation(Long memberId){
+    public MemberInformationResponse getMemberInformation(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
-        return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(),member.getKeyboardYn(), member.getTalkType());
+        return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(), member.getKeyboardYn(), member.getTalkType());
     }
 
     @Transactional
-    public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest){
+    public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest) {
         int deleteClover = consumeCloverRequest.deleteClover();
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
@@ -120,7 +120,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeNickname(Long memberId, String nickName){
+    public void changeNickname(Long memberId, String nickName) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateNickname(nickName);
