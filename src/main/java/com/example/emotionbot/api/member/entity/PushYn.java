@@ -1,6 +1,5 @@
 package com.example.emotionbot.api.member.entity;
 
-public enum KeyboardYn {
+public enum PushYn {
     Y, N
 }
-

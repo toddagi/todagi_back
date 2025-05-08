@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,21 +23,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DailySummaryRepositoryTest {
 
+    Member member;
     @Autowired
     private SummaryRepository summaryRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private DailySummaryRepository dailySummaryRepository;
-
     private int year;
     private int month;
     private int day;
     private LocalDate date;
 
-    Member member;
     @BeforeEach
     void setUp() {
         year = 2025;
@@ -70,36 +66,35 @@ class DailySummaryRepositoryTest {
         }
 
 
-
     }
 
     @Test
-    void 멤버조회(){
-       assertThat(member.getLoginId()).isEqualTo("testId");
+    void 멤버조회() {
+        assertThat(member.getLoginId()).isEqualTo("testId");
         System.out.println(dailySummaryRepository.findAll().size());
     }
 
 
     @Test
     void getMonthFeelingAverage_정상조회() {
-      MonthResponse.AverageFeeling averageFeeling=summaryRepository.getAverageFeeling(member.getId(),year,month);
-      assertThat(averageFeeling.angry()).isEqualTo(0);
+        MonthResponse.AverageFeeling averageFeeling = summaryRepository.getAverageFeeling(member.getId(), year, month);
+        assertThat(averageFeeling.angry()).isEqualTo(0);
     }
 
     @Test
-    void 날짜별_감정을_반환한다(){
-        assertThat(summaryRepository.getDailyFeeling(member.getId(),year,month)).isNotNull();
+    void 날짜별_감정을_반환한다() {
+        assertThat(summaryRepository.getDailyFeeling(member.getId(), year, month)).isNotNull();
     }
 
 
     @Test
-    void 주차별_감정을_반환한다(){
-        assertThat(summaryRepository.getWeeklyFeeling(member.getId(),date)).size().isEqualTo(7);
+    void 주차별_감정을_반환한다() {
+        assertThat(summaryRepository.getWeeklyFeeling(member.getId(), date)).size().isEqualTo(7);
     }
 
     @Test
-    void 하루_다섯개_감정을_반환한다(){
-        assertThat( summaryRepository.getEmotionScores(member.getId(),date).angry()).isEqualTo(0f);
+    void 하루_다섯개_감정을_반환한다() {
+        assertThat(summaryRepository.getEmotionScores(member.getId(), date).angry()).isEqualTo(0f);
 
     }
 
