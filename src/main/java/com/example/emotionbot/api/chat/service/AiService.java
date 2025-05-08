@@ -38,7 +38,6 @@ public class AiService {
 
             return response.getBody().message();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
         }
     }

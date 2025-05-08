@@ -116,16 +116,14 @@ public class GlobalExceptionHandler {
 
             return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), customMessage);
         } else {
-
             return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), failMessage.getMessage());
         }
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIErrorResponse> handleGeneralException(final Exception exception) {
-
+        log.error("Unhandled exception occurred", exception);
         final FailMessage failMessage = FailMessage.INTERNAL_SERVER_ERROR;
-        log.error("err", exception);
         return APIErrorResponse.of(failMessage.getHttpStatus(), failMessage.getCode(), failMessage.getMessage());
     }
 }
