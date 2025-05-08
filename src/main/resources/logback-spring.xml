@@ -2,12 +2,12 @@
 
     <!-- dev 환경: 상대 경로 logs/ 사용 -->
     <springProfile name="dev">
-        <property name="LOG_HOME" value="./logs"/>
+        <property name="LOG_HOME" value="./logs" />
     </springProfile>
 
     <!-- prod 환경: EC2 전용 경로 -->
     <springProfile name="prod">
-        <property name="LOG_HOME" value="/home/ec2-user/log"/>
+        <property name="LOG_HOME" value="/home/ec2-user/log" />
     </springProfile>
 
     <!-- Console Appender 추가: 콘솔로도 로그를 출력 -->
@@ -48,9 +48,9 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/> <!-- 콘솔 로그 출력 추가 -->
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="ERROR"/>
+        <appender-ref ref="CONSOLE" /> <!-- 콘솔 로그 출력 추가 -->
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR" />
     </root>
 
 </configuration>
