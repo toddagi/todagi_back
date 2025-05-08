@@ -28,8 +28,8 @@ public class ChallengeController {
     }
 
     @Operation(summary = "챌린지 보상받기", description = "챌린지 보상을 받습니다.")
-    @PostMapping("/reword")
-    public ResponseEntity<APISuccessResponse<LogoutResponse>> logout(@MemberId Long memberId, @RequestBody RewardChallengeRequest rewardChallengeRequest) {
+    @PostMapping("/reward")
+    public ResponseEntity<APISuccessResponse<LogoutResponse>> rewardChallenge(@MemberId Long memberId, @RequestBody RewardChallengeRequest rewardChallengeRequest) {
         challengeService.rewardChallenge(memberId, rewardChallengeRequest);
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(null));
     }

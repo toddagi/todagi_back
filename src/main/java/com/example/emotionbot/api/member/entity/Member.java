@@ -36,7 +36,7 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private KeyboardYn keyboardYn;
 
-    @Column(name = "talk_mode", columnDefinition = "varchar(5)", nullable = false)
+    @Column(name = "talk_mode", columnDefinition = "varchar(20)", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private TalkType talkType;
 
@@ -45,7 +45,7 @@ public class Member {
     private PushYn pushYn = PushYn.Y;
 
     @Column(name = "is_deleted", columnDefinition = "boolean", nullable = false)
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     @Builder
     public Member(String loginId, String password, String nickname, int clover, KeyboardYn keyboardYn, TalkType talkType, PushYn pushYn, boolean is_deleted) {
@@ -74,7 +74,7 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void updateTalkType(int talkTypeValue){
+    public void updateTalkType(int talkTypeValue) {
         for (TalkType type : TalkType.values()) {
             if (type.getTalkTypeValue() == talkTypeValue) {
                 this.talkType = type;
@@ -92,11 +92,11 @@ public class Member {
         }
     }
 
-    public void updateIsDeleted(){
+    public void updateIsDeleted() {
         this.isDeleted = true;
     }
 
-    public void updatePushYn(String pushYn){
+    public void updatePushYn(String pushYn) {
         try {
             this.pushYn = PushYn.valueOf(pushYn);
         } catch (IllegalArgumentException e) {
