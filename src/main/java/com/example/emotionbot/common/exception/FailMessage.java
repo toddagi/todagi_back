@@ -40,7 +40,8 @@ public enum FailMessage {
     CONFLICT_NO_ID(HttpStatus.CONFLICT, 40904, "존재하지 않는 아이디입니다"),
     CONFLICT_NO_CHALLENGE(HttpStatus.CONFLICT, 40905, "존재하지 않는 챌린지입니다"),
     CONFLICT_NO_CLOVER(HttpStatus.CONFLICT, 40906, "더이상 소모할 클로버가 없습니다."),
-
+    CONFLICT_NO_TALK_TYPE(HttpStatus.CONFLICT, 40907, "해당 talkTypeValue을 찾을 수 없습니다."),
+    CONFLICT_NO_YN(HttpStatus.CONFLICT, 40908, "입력값이 Y 또는 N이 아닙니다"),
 
 
     //500

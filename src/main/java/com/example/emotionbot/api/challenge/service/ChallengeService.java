@@ -29,7 +29,7 @@ public class ChallengeService {
 
     @Transactional
     public void createChallenge(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         LocalDate date = LocalDate.now();
@@ -47,7 +47,7 @@ public class ChallengeService {
 
     @Transactional
     public List<checkChallengeResponse> checkChallenge(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
 
         List<Challenge> challenges = challengeRepository.findAllByMemberId(memberId);
@@ -79,7 +79,7 @@ public class ChallengeService {
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_CHALLENGE));
         challenge.updateChallengeStatus(ChallengeStatus.END);
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.updateClover(challengeOption.getCoin());
     }

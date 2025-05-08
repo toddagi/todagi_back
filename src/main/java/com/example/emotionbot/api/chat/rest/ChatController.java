@@ -1,5 +1,7 @@
 package com.example.emotionbot.api.chat.rest;
 
+import com.example.emotionbot.api.challenge.entity.ChallengeOption;
+import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
@@ -31,6 +33,7 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberRepository memberRepository;
+    private final ChallengeService challengeService;
     private final ChatService chatService;
     private final AiService aiService;
 
@@ -48,6 +51,7 @@ public class ChatController {
     @MessageMapping("/send")
     public void sendMessage(ChatSendRequest chatSendRequest) {
         Member member = findMember(chatSendRequest.memberId());
+        challengeService.completeChallenge(chatSendRequest.memberId(), ChallengeOption.CHAT);
 
         // 사용자 메시지 저장 및 전송
         Chat userMessage = chatService.createChat(member, chatSendRequest.message(), Sender.USER, ChatType.SEND);
@@ -66,7 +70,7 @@ public class ChatController {
     }
 
     private Member findMember(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
     }
 

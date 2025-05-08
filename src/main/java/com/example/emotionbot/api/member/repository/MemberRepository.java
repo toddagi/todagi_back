@@ -16,4 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m.id FROM Member m")
     List<Long> findAllIds();
+
+    Optional<Member> findByIdAndIsDeletedFalse(Long id);
 }

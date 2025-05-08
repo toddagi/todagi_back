@@ -2,13 +2,15 @@ package com.example.emotionbot.api.member.service;
 
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
+import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.api.member.dto.request.LoginRequest;
 import com.example.emotionbot.api.member.dto.request.SignUpRequest;
 import com.example.emotionbot.api.member.dto.response.LoginResponse;
 import com.example.emotionbot.api.member.dto.response.LogoutResponse;
+import com.example.emotionbot.api.member.dto.response.MemberInformationResponse;
 import com.example.emotionbot.api.member.entity.Member;
+import com.example.emotionbot.api.member.entity.PushYn;
 import com.example.emotionbot.api.member.repository.MemberRepository;
-import com.example.emotionbot.api.member.dto.request.ConsumeCloverRequest;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import com.example.emotionbot.common.utils.JwtTokenUtil;
@@ -46,6 +48,8 @@ public class MemberService {
                 .clover(0)
                 .talkType(signUpRequest.talkType())
                 .keyboardYn(signUpRequest.keyboardYn())
+                .pushYn(PushYn.Y)
+                .is_deleted(false)
                 .build();
 
         Member savedMember = memberRepository.save(member);
@@ -104,10 +108,58 @@ public class MemberService {
     }
 
     @Transactional
-    public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest){
+    public void deleteMember(String refreshToken) {
+        refreshToken = jwtTokenUtil.extractTokenValue(refreshToken);
+        Claims claims = jwtTokenUtil.verify(refreshToken);
+        String loginId = claims.getSubject();
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+
+        member.updateIsDeleted();
+        redisTemplate.delete(loginId);
+    }
+
+    @Transactional
+    public MemberInformationResponse getMemberInformation(Long memberId) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(), member.getKeyboardYn(), member.getTalkType(), member.getPushYn(), member.getIsDeleted());
+    }
+
+    @Transactional
+    public void consumeClover(Long memberId, ConsumeCloverRequest consumeCloverRequest) {
         int deleteClover = consumeCloverRequest.deleteClover();
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
         member.consumeClover(deleteClover);
+    }
+
+    @Transactional
+    public void changeNickname(Long memberId, String nickName) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updateNickname(nickName);
+    }
+
+    @Transactional
+    public void changeTalkType(Long memberId, int talkTypeValue) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updateTalkType(talkTypeValue);
+    }
+
+    @Transactional
+    public void changeKeyBoardYn(Long memberId, String keyBoardYn) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updateKeyBoardYn(keyBoardYn);
+    }
+
+    @Transactional
+    public void changePushYn(Long memberId, String pushYn) {
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
+        member.updatePushYn(pushYn);
     }
 }

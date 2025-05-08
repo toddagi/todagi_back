@@ -34,17 +34,26 @@ public class AuthController {
     }
 
     @Operation(summary = "토큰 재발급", description = "Refresh Token을 통해 Access Token을 재발급받습니다.\n\n"
-            + "요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.")
+            + "요청 헤더에 `Authorization: Bearer {refresh_token}` 형식으로 전달해야 합니다.")
     @PostMapping("/refresh")
     public ResponseEntity<APISuccessResponse<LoginResponse>> reissueToken(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(memberService.reissueToken(refreshToken)));
     }
 
     @Operation(summary = "로그아웃", description = "사용자의 Refresh Token을 무효화하여 로그아웃 처리합니다.\n\n"
-            + "📌 요청 헤더에 `Authorization: Bearer {access_token}` 형식으로 전달해야 합니다.\n"
+            + "📌 요청 헤더에 `Authorization: Bearer {refresh_token}` 형식으로 전달해야 합니다.\n"
             + "✅ 로그아웃 시 해당 토큰은 더 이상 사용할 수 없게 됩니다.")
     @PostMapping("/logout")
     public ResponseEntity<APISuccessResponse<LogoutResponse>> logout(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(memberService.logOut(refreshToken)));
+    }
+
+    @Operation(summary = "회원탈퇴", description = "사용자의 Refresh Token을 무효화하고 회원상태를 탈퇴처리합니다.\n\n"
+            + "📌 요청 헤더에 `Authorization: Bearer {refresh_token}` 형식으로 전달해야 합니다.\n"
+            + "✅ 회원탈퇴 시 해당 토큰은 더 이상 사용할 수 없게 됩니다.")
+    @PostMapping("/delete-member")
+    public ResponseEntity<APISuccessResponse<Long>> deleteMember(@RequestHeader("Authorization") String refreshToken) {
+        memberService.deleteMember(refreshToken);
+        return ResponseEntity.ok(APISuccessResponse.ofCreateSuccess(null));
     }
 }
