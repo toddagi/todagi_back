@@ -9,6 +9,7 @@ import com.example.emotionbot.api.member.dto.response.LoginResponse;
 import com.example.emotionbot.api.member.dto.response.LogoutResponse;
 import com.example.emotionbot.api.member.dto.response.MemberInformationResponse;
 import com.example.emotionbot.api.member.entity.Member;
+import com.example.emotionbot.api.member.entity.PushYn;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
@@ -47,6 +48,8 @@ public class MemberService {
                 .clover(0)
                 .talkType(signUpRequest.talkType())
                 .keyboardYn(signUpRequest.keyboardYn())
+                .pushYn(PushYn.Y)
+                .is_deleted(false)
                 .build();
 
         Member savedMember = memberRepository.save(member);
@@ -121,7 +124,7 @@ public class MemberService {
     public MemberInformationResponse getMemberInformation(Long memberId) {
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new EmotionBotException(FailMessage.CONFLICT_NO_ID));
-        return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(), member.getKeyboardYn(), member.getTalkType());
+        return new MemberInformationResponse(memberId, member.getNickname(), member.getClover(), member.getKeyboardYn(), member.getTalkType(), member.getPushYn(), member.getIsDeleted());
     }
 
     @Transactional

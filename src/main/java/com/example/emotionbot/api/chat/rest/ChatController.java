@@ -1,8 +1,6 @@
 package com.example.emotionbot.api.chat.rest;
 
-import com.example.emotionbot.api.challenge.entity.Challenge;
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
-import com.example.emotionbot.api.challenge.repository.ChallengeRepository;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
 import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
@@ -11,7 +9,6 @@ import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
-import com.example.emotionbot.api.chat.repository.ChatRepository;
 import com.example.emotionbot.api.chat.service.AiService;
 import com.example.emotionbot.api.chat.service.ChatService;
 import com.example.emotionbot.api.member.entity.Member;
@@ -27,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Optional;
 
 @Slf4j
 @RestController
@@ -56,7 +51,7 @@ public class ChatController {
     @MessageMapping("/send")
     public void sendMessage(ChatSendRequest chatSendRequest) {
         Member member = findMember(chatSendRequest.memberId());
-        challengeService.completeChallenge(chatSendRequest.memberId(),ChallengeOption.CHAT);
+        challengeService.completeChallenge(chatSendRequest.memberId(), ChallengeOption.CHAT);
 
         // 사용자 메시지 저장 및 전송
         Chat userMessage = chatService.createChat(member, chatSendRequest.message(), Sender.USER, ChatType.SEND);
