@@ -1,6 +1,8 @@
 package com.example.emotionbot.api.dailySummary.service;
 
-//@SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
 class DiaryServiceTest {
 
 //    @Autowired
