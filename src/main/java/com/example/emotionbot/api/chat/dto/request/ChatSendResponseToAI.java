@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record ChatSendResponse(
+public record ChatSendResponseToAI(
         List<String> message
 ) {
 }
