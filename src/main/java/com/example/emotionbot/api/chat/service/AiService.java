@@ -21,8 +21,10 @@ public class AiService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${spring.ai.server.url}")
-    private String aiServerUrl;
+    @Value("${spring.ai.server.chat.url}")
+    private String aiChatUrl;
+    @Value("${spring.ai.server.summary.url}")
+    private String aiSummaryUrl;
 
     public List<String> askToAi(ChatSendRequestToAI chatSendRequestToAI) {
         try {
@@ -31,7 +33,7 @@ public class AiService {
             HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(chatSendRequestToAI, headers);
 
             ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
-                    aiServerUrl,
+                    aiChatUrl,
                     request,
                     ChatSendResponse.class
             );
@@ -42,5 +44,26 @@ public class AiService {
             throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
         }
     }
+
+    public List<String> askChatSummary(Long memberId, String talkType) {
+        try {
+            ChatSendRequestToAI requestDto = new ChatSendRequestToAI(memberId, "", talkType);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(requestDto, headers);
+
+            ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
+                    aiSummaryUrl,
+                    request,
+                    ChatSendResponse.class
+            );
+
+            return response.getBody().message();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
+        }
+    }
+
 
 }
