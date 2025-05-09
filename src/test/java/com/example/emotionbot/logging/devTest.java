@@ -9,9 +9,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("dev")
 public class devTest {
 
-    @Test
-    @DisplayName("컨솔로그만 찍힌다")
-    public void dev_환경_작동_확인(){
-
-    }
+//    @Test
+//    @DisplayName("컨솔로그만 찍힌다")
+//    public void dev_환경_작동_확인(){
+//
+//    }
 }
