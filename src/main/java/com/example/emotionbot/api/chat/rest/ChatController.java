@@ -40,8 +40,9 @@ public class ChatController {
         // ✅ AI에게 summary 요청
         List<String> summaries = aiService.askChatSummary(new ChatEnterRequestToAI(chatEnterRequest.memberId()));
 
-        // 요약 메시지가 없으면 환영 메시지 출력
-        if (summaries == null || summaries.isEmpty()) {
+        if (summaries == null || summaries.isEmpty()
+                || (summaries.size() == 1 && "NULL".equalsIgnoreCase(summaries.get(0)))) {
+
             Chat botMessage = chatService.createChat(member, "환영합니다", Sender.BOT, ChatType.ENTER);
             chatService.saveChat(botMessage);
             sendToClient(botMessage);

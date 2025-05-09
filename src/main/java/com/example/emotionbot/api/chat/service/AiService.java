@@ -1,8 +1,9 @@
 package com.example.emotionbot.api.chat.service;
 
 import com.example.emotionbot.api.chat.dto.request.ChatEnterRequestToAI;
+import com.example.emotionbot.api.chat.dto.request.ChatEnterResponseToAI;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
-import com.example.emotionbot.api.chat.dto.request.ChatSendResponse;
+import com.example.emotionbot.api.chat.dto.request.ChatSendResponseToAI;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
 import lombok.RequiredArgsConstructor;
@@ -27,34 +28,35 @@ public class AiService {
     @Value("${spring.ai.server.summary.url}")
     private String aiSummaryUrl;
 
-    public List<String> askToAi(ChatSendRequestToAI chatSendRequestToAI) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(chatSendRequestToAI, headers);
-
-            ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
-                    aiChatUrl,
-                    request,
-                    ChatSendResponse.class
-            );
-
-            return response.getBody().message();
-        } catch (Exception e) {
-            throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
-        }
-    }
-
     public List<String> askChatSummary(ChatEnterRequestToAI chatEnterRequestToAI) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ChatEnterRequestToAI> request = new HttpEntity<>(chatEnterRequestToAI, headers);
 
-            ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
+            ResponseEntity<ChatEnterResponseToAI> response = restTemplate.postForEntity(
                     aiSummaryUrl,
                     request,
-                    ChatSendResponse.class
+                    ChatEnterResponseToAI.class
+            );
+
+            return response.getBody().summary();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new EmotionBotException(FailMessage.INTERNAL_AI_SERVER_ERROR);
+        }
+    }
+
+    public List<String> askToAi(ChatSendRequestToAI chatSendRequestToAI) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(chatSendRequestToAI, headers);
+
+            ResponseEntity<ChatSendResponseToAI> response = restTemplate.postForEntity(
+                    aiChatUrl,
+                    request,
+                    ChatSendResponseToAI.class
             );
 
             return response.getBody().message();
