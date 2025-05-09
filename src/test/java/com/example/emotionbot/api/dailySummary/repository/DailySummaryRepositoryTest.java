@@ -5,6 +5,7 @@ import com.example.emotionbot.api.dailySummary.entity.DailySummary;
 import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.member.entity.KeyboardYn;
 import com.example.emotionbot.api.member.entity.Member;
+import com.example.emotionbot.api.member.entity.PushYn;
 import com.example.emotionbot.api.member.entity.TalkType;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -49,6 +50,8 @@ class DailySummaryRepositoryTest {
                 .clover(100)
                 .keyboardYn(KeyboardYn.Y)
                 .talkType(TalkType.T)
+                .pushYn(PushYn.Y)
+                .is_deleted(false)
                 .build();
 
         memberRepository.save(member);
