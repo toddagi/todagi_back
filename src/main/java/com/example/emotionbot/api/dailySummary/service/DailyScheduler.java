@@ -6,6 +6,7 @@ import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DailyScheduler {
 
     private final MemberRepository memberRepository;
@@ -32,5 +34,6 @@ public class DailyScheduler {
                 dailySummaryRepository.save(summary);
             }
         }
+        log.info("running thread- {}", Thread.currentThread().getName());
     }
 }
