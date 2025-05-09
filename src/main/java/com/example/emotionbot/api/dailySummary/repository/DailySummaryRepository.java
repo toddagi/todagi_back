@@ -1,11 +1,13 @@
 package com.example.emotionbot.api.dailySummary.repository;
 
 import com.example.emotionbot.api.dailySummary.entity.DailySummary;
+import com.example.emotionbot.api.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -30,4 +32,5 @@ public interface DailySummaryRepository extends JpaRepository<DailySummary, Long
     );
 
 
+    boolean existsByMemberAndDate(Member member, LocalDate today);
 }
