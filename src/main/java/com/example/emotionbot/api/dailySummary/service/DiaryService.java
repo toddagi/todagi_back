@@ -56,9 +56,9 @@ public class DiaryService {
                         diary.getDate(),
                         diary.getSummary(),
                         diary.getAngry(),
-                        diary.getAnnoy(),
+                        diary.getSad(),
                         diary.getSleepy(),
-                        diary.getGood(),
+                        diary.getExcellent(),
                         diary.getHappy()
                 ))
                 .toList();
