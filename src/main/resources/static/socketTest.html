@@ -71,11 +71,17 @@
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             logToChatBox("✅ 연결 성공", "BOT");
-
             stompClient.subscribe("/topic/chat", function (response) {
                 const msg = JSON.parse(response.body);
-                logToChatBox(msg.message, msg.sender);
+
+                if (msg.data) {
+                    logToChatBox(msg.data.message, msg.data.sender);
+                } else {
+                    // data가 없으면 (send의 경우) 바로 꺼낸다
+                    logToChatBox(msg.message, msg.sender);
+                }
             });
+
         }, function (error) {
             logToChatBox("❌ 연결 실패", "BOT");
         });
