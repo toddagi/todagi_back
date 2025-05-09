@@ -2,10 +2,7 @@ package com.example.emotionbot.api.chat.rest;
 
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
-import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
-import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
-import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
-import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
+import com.example.emotionbot.api.chat.dto.request.*;
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
@@ -41,7 +38,7 @@ public class ChatController {
         Member member = findMember(chatEnterRequest.memberId());
 
         // ✅ AI에게 summary 요청
-        List<String> summaries = aiService.askChatSummary(member.getId(), member.getTalkType().getTalkTypeString());
+        List<String> summaries = aiService.askChatSummary(new ChatEnterRequestToAI(chatEnterRequest.memberId()));
 
         // 요약 메시지가 없으면 환영 메시지 출력
         if (summaries == null || summaries.isEmpty()) {

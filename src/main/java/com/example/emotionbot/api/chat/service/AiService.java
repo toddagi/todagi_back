@@ -1,5 +1,6 @@
 package com.example.emotionbot.api.chat.service;
 
+import com.example.emotionbot.api.chat.dto.request.ChatEnterRequestToAI;
 import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
 import com.example.emotionbot.api.chat.dto.request.ChatSendResponse;
 import com.example.emotionbot.common.exception.EmotionBotException;
@@ -45,12 +46,11 @@ public class AiService {
         }
     }
 
-    public List<String> askChatSummary(Long memberId, String talkType) {
+    public List<String> askChatSummary(ChatEnterRequestToAI chatEnterRequestToAI) {
         try {
-            ChatSendRequestToAI requestDto = new ChatSendRequestToAI(memberId, "", talkType);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<ChatSendRequestToAI> request = new HttpEntity<>(requestDto, headers);
+            HttpEntity<ChatEnterRequestToAI> request = new HttpEntity<>(chatEnterRequestToAI, headers);
 
             ResponseEntity<ChatSendResponse> response = restTemplate.postForEntity(
                     aiSummaryUrl,
