@@ -12,6 +12,7 @@ public enum TalkType {
     GIRLFRIEND("여자친구형", 4),
     BOYFRIEND("남자친구형", 5);
 
+
     private final String talkTypeString;
     private final int talkTypeValue;
 }

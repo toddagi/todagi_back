@@ -39,14 +39,14 @@ public class DailySummary {
     @Column(name = "angry", columnDefinition = "double")
     private float angry;
 
-    @Column(name = "annoy", columnDefinition = "double")
-    private float annoy;
+    @Column(name = "sad", columnDefinition = "double")
+    private float sad;
 
     @Column(name = "sleepy", columnDefinition = "double")
     private float sleepy;
 
-    @Column(name = "good", columnDefinition = "double")
-    private float good;
+    @Column(name = "excellent", columnDefinition = "double")
+    private float excellent;
 
     @Column(name = "happy", columnDefinition = "double")
     private float happy;

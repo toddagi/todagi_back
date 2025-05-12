@@ -7,7 +7,9 @@
         #chatBox {
             background-color: #f0f0f0;
             padding: 10px;
+
             height: 1000px;
+
             overflow-y: scroll;
             display: flex;
             flex-direction: column;
@@ -35,6 +37,11 @@
 </head>
 <body>
 <h2>WebSocket STOMP 테스트</h2>
+
+<div>
+    <label for="memberId">Member ID: </label>
+    <input id="memberId" type="number" placeholder="예: 1">
+</div>
 
 <div>
     <button onclick="connect()">Connect</button>
@@ -65,17 +72,31 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    function getMemberId() {
+        const id = document.getElementById("memberId").value;
+        if (!id) {
+            logToChatBox("❗ Member ID를 입력해주세요.", "BOT");
+            throw new Error("Member ID 없음");
+        }
+        return parseInt(id);
+    }
+
     function connect() {
         //const socket = new SockJS("http://localhost:8080/ws");
         const socket = new SockJS('http://43.202.30.61:8080/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             logToChatBox("✅ 연결 성공", "BOT");
-
             stompClient.subscribe("/topic/chat", function (response) {
                 const msg = JSON.parse(response.body);
-                logToChatBox(msg.message, msg.sender);
+
+                if (msg.data) {
+                    logToChatBox(msg.data.message, msg.data.sender);
+                } else {
+                    logToChatBox(msg.message, msg.sender);
+                }
             });
+
         }, function (error) {
             logToChatBox("❌ 연결 실패", "BOT");
         });
@@ -87,15 +108,19 @@
             return;
         }
 
-        const message = {
-            memberId: 1, // ← 실제 존재하는 memberId로 수정
-            sendTime: new Date().toISOString(),
-            type: "ENTER",
-            sender: "USER"
-        };
+        try {
+            const message = {
+                memberId: getMemberId(),
+                sendTime: new Date().toISOString(),
+                type: "ENTER",
+                sender: "USER"
+            };
 
-        stompClient.send("/app/enter", {}, JSON.stringify(message));
-        logToChatBox("🚀 입장 요청 보냄", "USER");
+            stompClient.send("/app/enter", {}, JSON.stringify(message));
+            logToChatBox("🚀 입장 요청 보냄", "USER");
+        } catch (e) {
+            // 이미 메시지 출력됨
+        }
     }
 
     function sendMessage() {
@@ -111,19 +136,21 @@
             return;
         }
 
-        const payload = {
-            memberId: 1, // ← 실제 존재하는 memberId로 수정
-            sendTime: new Date().toISOString(), // ISO 형식으로 시간 전달
-            message: message,
-            type: "SEND", // ChatType enum 값
-            sender: "USER" // Sender enum 값
-        };
+        try {
+            const payload = {
+                memberId: getMemberId(),
+                sendTime: new Date().toISOString(),
+                message: message,
+                type: "SEND",
+                sender: "USER"
+            };
 
-        stompClient.send("/app/send", {}, JSON.stringify(payload));
-
-        input.value = "";
+            stompClient.send("/app/send", {}, JSON.stringify(payload));
+            input.value = "";
+        } catch (e) {
+            // 이미 메시지 출력됨
+        }
     }
-
 </script>
 </body>
 </html>

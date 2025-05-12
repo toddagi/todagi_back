@@ -26,9 +26,9 @@ public class SummaryRepository {
 
         Tuple result = queryFactory.select(
                         ds.angry.avg(),
-                        ds.annoy.avg(),
+                        ds.sad.avg(),
                         ds.sleepy.avg(),
-                        ds.good.avg(),
+                        ds.excellent.avg(),
                         ds.happy.avg()
                 )
                 .from(ds)
@@ -40,9 +40,9 @@ public class SummaryRepository {
                 .fetchOne();
         return new MonthResponse.AverageFeeling(
                 result.get(ds.angry.avg()),
-                result.get(ds.annoy.avg()),
+                result.get(ds.sad.avg()),
                 result.get(ds.sleepy.avg()),
-                result.get(ds.good.avg()),
+                result.get(ds.excellent.avg()),
                 result.get(ds.happy.avg())
         );
     }
@@ -113,9 +113,9 @@ public class SummaryRepository {
                 .select(Projections.constructor(
                         DayResponse.EmotionScores.class,
                         ds.angry,
-                        ds.annoy,
+                        ds.sad,
                         ds.sleepy,
-                        ds.good,
+                        ds.excellent,
                         ds.happy
                 ))
                 .from(ds)

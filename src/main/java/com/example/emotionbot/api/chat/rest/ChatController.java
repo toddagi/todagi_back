@@ -2,10 +2,8 @@ package com.example.emotionbot.api.chat.rest;
 
 import com.example.emotionbot.api.challenge.entity.ChallengeOption;
 import com.example.emotionbot.api.challenge.service.ChallengeService;
-import com.example.emotionbot.api.chat.dto.request.ChatEnterRequest;
-import com.example.emotionbot.api.chat.dto.request.ChatEnterResponse;
-import com.example.emotionbot.api.chat.dto.request.ChatSendRequest;
-import com.example.emotionbot.api.chat.dto.request.ChatSendRequestToAI;
+import com.example.emotionbot.api.chat.dto.request.*;
+
 import com.example.emotionbot.api.chat.entity.Chat;
 import com.example.emotionbot.api.chat.entity.ChatType;
 import com.example.emotionbot.api.chat.entity.Sender;
@@ -15,7 +13,6 @@ import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
-import com.example.emotionbot.common.response.APISuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -41,11 +38,24 @@ public class ChatController {
     public void enter(ChatEnterRequest chatEnterRequest) {
         Member member = findMember(chatEnterRequest.memberId());
 
-        Chat botMessage = chatService.createChat(member, "환영합니다", Sender.BOT, ChatType.ENTER);
-        chatService.saveChat(botMessage);
+        // ✅ AI에게 summary 요청
+        List<String> summaries = aiService.askChatSummary(new ChatEnterRequestToAI(chatEnterRequest.memberId()));
 
-        ChatEnterResponse response = createResponse(member.getId(), botMessage.getMessage(), Sender.BOT);
-        messagingTemplate.convertAndSend("/topic/chat", APISuccessResponse.ofSuccess(response));
+        if (summaries == null || summaries.isEmpty()
+                || (summaries.size() == 1 && "NULL".equalsIgnoreCase(summaries.get(0)))) {
+
+            Chat botMessage = chatService.createChat(member, "환영합니다", Sender.BOT, ChatType.ENTER);
+            chatService.saveChat(botMessage);
+            sendToClient(botMessage);
+            return;
+        }
+
+        // 요약 메시지 출력
+        for (String summary : summaries) {
+            Chat aiMessage = chatService.createChat(member, summary, Sender.BOT, ChatType.SUMMARY);
+            chatService.saveChat(aiMessage);
+            sendToClient(aiMessage);
+        }
     }
 
     @MessageMapping("/send")

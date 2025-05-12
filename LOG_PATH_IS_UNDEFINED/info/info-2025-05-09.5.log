@@ -1,0 +1,7 @@
+2025-05-09 23:26:49.252 [main] 98374  INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-09 23:26:49.669 [main] 98374  INFO com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63b58ff4
+2025-05-09 23:26:49.670 [main] 98374  INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-09 23:26:50.096 [main] 98374  INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-09 23:26:50.548 [main] 98374  INFO org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-09 23:26:50.658 [main] 98374  INFO org.springframework.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-09 23:26:51.192 [main] 98374  INFO org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailServiceImpl

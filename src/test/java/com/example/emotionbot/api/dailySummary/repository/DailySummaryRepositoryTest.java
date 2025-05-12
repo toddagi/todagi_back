@@ -5,6 +5,7 @@ import com.example.emotionbot.api.dailySummary.entity.DailySummary;
 import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.member.entity.KeyboardYn;
 import com.example.emotionbot.api.member.entity.Member;
+import com.example.emotionbot.api.member.entity.PushYn;
 import com.example.emotionbot.api.member.entity.TalkType;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-
 
 import java.time.LocalDate;
 

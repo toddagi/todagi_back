@@ -10,8 +10,10 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("prod")
 public class prodTest {
 
+
     @Test
     @DisplayName("error,info,warn 이 만들어진다")
     public void prod_환경_작동_확인(){
     }
+
 }
