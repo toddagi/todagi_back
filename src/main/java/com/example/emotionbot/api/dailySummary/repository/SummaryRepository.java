@@ -2,6 +2,7 @@ package com.example.emotionbot.api.dailySummary.repository;
 
 import com.example.emotionbot.api.dailySummary.dto.res.DayResponse;
 import com.example.emotionbot.api.dailySummary.dto.res.MonthResponse;
+import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Repository
@@ -71,7 +73,7 @@ public class SummaryRepository {
         LocalDate startOfWeek = date.with(DayOfWeek.MONDAY);
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        return queryFactory
+        List<DayResponse.WeeklyFeeling> weeklyFeelings=queryFactory
                 .select(Projections.constructor(
                         DayResponse.WeeklyFeeling.class,
                         ds.date,
@@ -84,6 +86,23 @@ public class SummaryRepository {
                 )
                 .orderBy(ds.date.asc())
                 .fetch();
+
+        if (weeklyFeelings.size()!=7){
+            //데이터베이스에 저장된 마지막 기록
+            DayResponse.WeeklyFeeling lastFeeling=weeklyFeelings.get(weeklyFeelings.size()-1);
+
+            long dayBetween= ChronoUnit.DAYS.between(startOfWeek, lastFeeling.date());
+
+            for (int i=(int)dayBetween+1;i<7;i++){
+                LocalDate futureDay = startOfWeek.plusDays(i);
+                DayResponse.WeeklyFeeling tempFeeling=new DayResponse.WeeklyFeeling(futureDay, Feeling.UNKOWN);
+                weeklyFeelings.add(tempFeeling);
+            }
+
+        }
+
+        return weeklyFeelings;
+
     }
 
 

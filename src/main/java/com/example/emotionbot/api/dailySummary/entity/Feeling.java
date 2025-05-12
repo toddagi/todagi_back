@@ -1,7 +1,8 @@
 package com.example.emotionbot.api.dailySummary.entity;
 
 public enum Feeling {
-    ANGRY(0), SAD(1), SLEEPY(2), EXCELLENT(3), HAPPY(4);
+    ANGRY(0), ANNOY(1), SLEEPY(2), GOOD(3), HAPPY(4), UNKOWN(5);
+
     private final int value;
 
     Feeling(int value) {
@@ -15,6 +16,7 @@ public enum Feeling {
             case 2 -> SLEEPY;
             case 3 -> EXCELLENT;
             case 4 -> HAPPY;
+        
             default -> throw new IllegalArgumentException("Invalid value: " + value);
         };
     }

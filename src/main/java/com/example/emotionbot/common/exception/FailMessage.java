@@ -43,7 +43,6 @@ public enum FailMessage {
     CONFLICT_NO_TALK_TYPE(HttpStatus.CONFLICT, 40907, "해당 talkTypeValue을 찾을 수 없습니다."),
     CONFLICT_NO_YN(HttpStatus.CONFLICT, 40908, "입력값이 Y 또는 N이 아닙니다"),
 
-
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50000, "서버 내부 오류가 발생했습니다."),
     INTERNAL_TOKEN_INIT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50001, "SECRET KEY가 초기화되지 않았습니다."),
