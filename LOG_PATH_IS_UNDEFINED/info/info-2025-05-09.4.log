@@ -1,8 +1,0 @@
-2025-05-09 23:26:49.025 [main] 98374  INFO org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-09 23:26:49.025 [main] 98374  INFO org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.30]
-2025-05-09 23:26:49.045 [main] 98374  INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-09 23:26:49.045 [main] 98374  INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 636 ms
-2025-05-09 23:26:49.095 [main] 98374  INFO org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-05-09 23:26:49.113 [main] 98374  INFO org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.3.Final
-2025-05-09 23:26:49.124 [main] 98374  INFO org.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
-2025-05-09 23:26:49.238 [main] 98374  INFO org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
