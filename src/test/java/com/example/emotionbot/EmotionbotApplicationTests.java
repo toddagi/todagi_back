@@ -7,9 +7,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("dev")
 @SpringBootTest
 class EmotionbotApplicationTests {
-//
-//    @Test
-//    void contextLoads() {
-//    }
+
+   @Test
+   void contextLoads() {
+   }
 
 }
