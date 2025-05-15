@@ -53,6 +53,7 @@ class DailySummaryRepositoryTest {
                 .clover(100)
                 .keyboardYn(KeyboardYn.Y)
                 .talkType(TalkType.T)
+                .pushYn(PushYn.Y)
                 .build();
 
         memberRepository.save(member);
