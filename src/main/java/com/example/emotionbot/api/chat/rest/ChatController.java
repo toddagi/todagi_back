@@ -86,7 +86,7 @@ public class ChatController {
 
     private void sendToClient(Chat chat) {
         ChatEnterResponse response = createResponse(chat.getMember().getId(), chat.getMessage(), chat.getSender());
-        messagingTemplate.convertAndSend("/topic/chat", response);
+        messagingTemplate.convertAndSend("/topic/chat/" + chat.getMember().getId(), response);  // ✅ 변경
     }
 
     private ChatEnterResponse createResponse(Long memberId, String message, Sender sender) {

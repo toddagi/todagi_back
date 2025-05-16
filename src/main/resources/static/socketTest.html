@@ -82,12 +82,12 @@
     }
 
     function connect() {
-        //const socket = new SockJS("http://localhost:8080/ws");
-        const socket = new SockJS('http://43.202.30.61:8080/ws');
+        const socket = new SockJS("http://localhost:8080/ws");
+        //const socket = new SockJS('http://43.202.30.61:8080/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             logToChatBox("✅ 연결 성공", "BOT");
-            stompClient.subscribe("/topic/chat", function (response) {
+            stompClient.subscribe(`/topic/chat/${memberId}`, function (response) {
                 const msg = JSON.parse(response.body);
 
                 if (msg.data) {
