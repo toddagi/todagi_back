@@ -82,14 +82,14 @@
     }
 
     function connect() {
-        //const socket = new SockJS("http://localhost:8080/ws");
         const socket = new SockJS('http://43.202.30.61:8080/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             logToChatBox("✅ 연결 성공", "BOT");
-            stompClient.subscribe(`/topic/chat/${memberId}`, function (response) {
-                const msg = JSON.parse(response.body);
 
+            const id = getMemberId(); // 이 줄 추가
+            stompClient.subscribe(`/topic/chat/${id}`, function (response) {
+                const msg = JSON.parse(response.body);
                 if (msg.data) {
                     logToChatBox(msg.data.message, msg.data.sender);
                 } else {
@@ -101,6 +101,8 @@
             logToChatBox("❌ 연결 실패", "BOT");
         });
     }
+
+
 
     function enterChat() {
         if (!stompClient || !stompClient.connected) {
