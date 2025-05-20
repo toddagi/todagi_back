@@ -10,9 +10,9 @@ public record MonthResponse(AverageFeeling averageFeelings,
                             Float diaryAvg) {
     public record AverageFeeling(
             double angry,
-            double annoy,
+            double sad,
             double sleepy,
-            double good,
+            double excellent,
             double happy
     ) {
     }
