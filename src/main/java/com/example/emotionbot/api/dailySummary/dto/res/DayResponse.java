@@ -11,6 +11,6 @@ public record DayResponse(List<WeeklyFeeling> weeklyFeelingList,
     public record WeeklyFeeling(LocalDate date, Feeling feeling) {
     }
 
-    public record EmotionScores(float angry, float annoy, float sleepy, float good, float happy) {
+    public record EmotionScores(float angry, float sad, float sleepy, float excellent, float happy) {
     }
 }
