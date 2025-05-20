@@ -29,7 +29,7 @@ public class DailySummary {
     @Column(name = "summary", columnDefinition = "varchar(100)", nullable = true)
     private String summary;
 
-    @Column(name = "diary", columnDefinition = "varchar(100)", nullable = true)
+    @Column(name = "diary", columnDefinition = "text", nullable = true)
     private String diary;
 
     @Column(name = "feeling")
