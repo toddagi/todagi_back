@@ -6,6 +6,8 @@ import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,10 @@ import org.springframework.stereotype.Repository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,12 +29,18 @@ public class SummaryRepository {
     public MonthResponse.AverageFeeling getAverageFeeling(Long memberId, int year, int month) {
         QDailySummary ds = QDailySummary.dailySummary;
 
+        NumberExpression<Double> avgAngry = ds.angry.avg();
+        NumberExpression<Double> avgSad = ds.sad.avg();
+        NumberExpression<Double> avgSleepy = ds.sleepy.avg();
+        NumberExpression<Double> avgExcellent = ds.excellent.avg();
+        NumberExpression<Double> avgHappy = ds.happy.avg();
+
         Tuple result = queryFactory.select(
-                        ds.angry.avg(),
-                        ds.sad.avg(),
-                        ds.sleepy.avg(),
-                        ds.excellent.avg(),
-                        ds.happy.avg()
+                        avgAngry,
+                        avgSad,
+                        avgSleepy,
+                        avgExcellent,
+                        avgHappy
                 )
                 .from(ds)
                 .where(
@@ -38,12 +49,25 @@ public class SummaryRepository {
                         ds.date.month().eq(month)
                 )
                 .fetchOne();
+
+        double angry = result.get(avgAngry) != null ? result.get(avgAngry) : 0.0;
+        double sad = result.get(avgSad) != null ? result.get(avgSad) : 0.0;
+        double sleepy = result.get(avgSleepy) != null ? result.get(avgSleepy) : 0.0;
+        double excellent = result.get(avgExcellent) != null ? result.get(avgExcellent) : 0.0;
+        double happy = result.get(avgHappy) != null ? result.get(avgHappy) : 0.0;
+
+        double sum = angry + sad + sleepy + excellent + happy;
+
+        if (sum == 0.0) {
+            return new MonthResponse.AverageFeeling(0, 0, 0, 0, 0);
+        }
+
         return new MonthResponse.AverageFeeling(
-                result.get(ds.angry.avg()),
-                result.get(ds.sad.avg()),
-                result.get(ds.sleepy.avg()),
-                result.get(ds.excellent.avg()),
-                result.get(ds.happy.avg())
+                (int) ((angry / sum) * 100),
+                (int) ((sad / sum) * 100),
+                (int) ((sleepy / sum) * 100),
+                (int) ((excellent / sum) * 100),
+                (int) ((happy / sum) * 100)
         );
     }
 
@@ -73,7 +97,7 @@ public class SummaryRepository {
         LocalDate startOfWeek = date.with(DayOfWeek.MONDAY);
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        List<DayResponse.WeeklyFeeling> weeklyFeelings=queryFactory
+        List<DayResponse.WeeklyFeeling> weeklyFeelings = queryFactory
                 .select(Projections.constructor(
                         DayResponse.WeeklyFeeling.class,
                         ds.date,
@@ -84,32 +108,26 @@ public class SummaryRepository {
                         ds.member.id.eq(memberId),
                         ds.date.between(startOfWeek, endOfWeek)
                 )
-                .orderBy(ds.date.asc())
                 .fetch();
 
-        if (weeklyFeelings.size()!=7){
-            //데이터베이스에 저장된 마지막 기록
-            DayResponse.WeeklyFeeling lastFeeling=weeklyFeelings.get(weeklyFeelings.size()-1);
+        Map<LocalDate, Feeling> feelingMap = weeklyFeelings.stream()
+                .collect(Collectors.toMap(DayResponse.WeeklyFeeling::date, DayResponse.WeeklyFeeling::feeling));
 
-            long dayBetween= ChronoUnit.DAYS.between(startOfWeek, lastFeeling.date());
-
-            for (int i=(int)dayBetween+1;i<7;i++){
-                LocalDate futureDay = startOfWeek.plusDays(i);
-                DayResponse.WeeklyFeeling tempFeeling=new DayResponse.WeeklyFeeling(futureDay, Feeling.UNKOWN);
-                weeklyFeelings.add(tempFeeling);
-            }
-
+        List<DayResponse.WeeklyFeeling> result = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            LocalDate day = startOfWeek.plusDays(i);
+            Feeling feeling = feelingMap.getOrDefault(day, Feeling.UNKOWN);
+            result.add(new DayResponse.WeeklyFeeling(day, feeling));
         }
 
-        return weeklyFeelings;
-
+        return result;
     }
 
 
     public DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date) {
         QDailySummary ds = QDailySummary.dailySummary;
 
-        DayResponse.EmotionScores result = queryFactory
+        DayResponse.EmotionScores raw = queryFactory
                 .select(Projections.constructor(
                         DayResponse.EmotionScores.class,
                         ds.angry,
@@ -125,10 +143,27 @@ public class SummaryRepository {
                 )
                 .fetchOne();
 
-        return result != null
-                ? result
-                : new DayResponse.EmotionScores(0f, 0f, 0f, 0f, 0f);
-    }
-}
+        float angry = raw != null ? raw.angry() : 0f;
+        float sad = raw != null ? raw.sad() : 0f;
+        float sleepy = raw != null ? raw.sleepy() : 0f;
+        float excellent = raw != null ? raw.excellent() : 0f;
+        float happy = raw != null ? raw.happy() : 0f;
 
+        float sum = angry + sad + sleepy + excellent + happy;
+
+        if (sum == 0f) {
+            return new DayResponse.EmotionScores(0, 0, 0, 0, 0);
+        }
+
+        return new DayResponse.EmotionScores(
+                (int) ((angry / sum) * 100),
+                (int) ((sad / sum) * 100),
+                (int) ((sleepy / sum) * 100),
+                (int) ((excellent / sum) * 100),
+                (int) ((happy / sum) * 100)
+        );
+    }
+
+
+}
 

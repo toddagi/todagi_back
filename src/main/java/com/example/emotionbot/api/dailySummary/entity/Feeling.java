@@ -1,7 +1,7 @@
 package com.example.emotionbot.api.dailySummary.entity;
 
 public enum Feeling {
-    ANGRY(0), SAD(1), SLEEPY(2), EXCELLENT(3), HAPPY(4), UNKOWN(5);
+    ANGRY(0), SAD(1), SLEEPY(2), EXCELLENT(3), HAPPY(4), UNKOWN(5),ANNOY(6);
 
     private final int value;
 

@@ -37,19 +37,19 @@ public class DailySummary {
     private Feeling feeling;
 
     @Column(name = "angry", columnDefinition = "double")
-    private float angry;
+    private Float angry;
 
     @Column(name = "sad", columnDefinition = "double")
-    private float sad;
+    private Float sad;
 
     @Column(name = "sleepy", columnDefinition = "double")
-    private float sleepy;
+    private Float sleepy;
 
     @Column(name = "excellent", columnDefinition = "double")
-    private float excellent;
+    private Float excellent;
 
     @Column(name = "happy", columnDefinition = "double")
-    private float happy;
+    private Float happy;
 
 
     @Builder

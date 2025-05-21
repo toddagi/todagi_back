@@ -28,8 +28,8 @@ public class DiaryController {
 
     @Operation(summary = "요일 별 일기 조회", description = "월별로 일기를 조회합니다")
     @GetMapping
-    public ResponseEntity<APISuccessResponse<List<DiaryResponse>>> getDailySummariesByMonth(@MemberId Long memberId, @RequestParam int year, @RequestParam int month) {
-        List<DiaryResponse> dailySummaries = diaryService.getDailySummariesByMonth(year, month, memberId);
+    public ResponseEntity<APISuccessResponse<List<DiaryResponse>>> getDailySummariesByMonth(@MemberId Long memberId, @RequestParam String date) {
+        List<DiaryResponse> dailySummaries = diaryService.getDailySummariesByMonth(date, memberId);
         if (dailySummaries.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
