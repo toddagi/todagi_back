@@ -6,6 +6,8 @@ import com.example.emotionbot.api.dailySummary.entity.Feeling;
 import com.example.emotionbot.api.dailySummary.entity.QDailySummary;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -27,12 +29,18 @@ public class SummaryRepository {
     public MonthResponse.AverageFeeling getAverageFeeling(Long memberId, int year, int month) {
         QDailySummary ds = QDailySummary.dailySummary;
 
+        NumberExpression<Double> avgAngry = ds.angry.avg();
+        NumberExpression<Double> avgSad = ds.sad.avg();
+        NumberExpression<Double> avgSleepy = ds.sleepy.avg();
+        NumberExpression<Double> avgExcellent = ds.excellent.avg();
+        NumberExpression<Double> avgHappy = ds.happy.avg();
+
         Tuple result = queryFactory.select(
-                        ds.angry.avg(),
-                        ds.sad.avg(),
-                        ds.sleepy.avg(),
-                        ds.excellent.avg(),
-                        ds.happy.avg()
+                        avgAngry,
+                        avgSad,
+                        avgSleepy,
+                        avgExcellent,
+                        avgHappy
                 )
                 .from(ds)
                 .where(
@@ -41,12 +49,25 @@ public class SummaryRepository {
                         ds.date.month().eq(month)
                 )
                 .fetchOne();
+
+        double angry = result.get(avgAngry) != null ? result.get(avgAngry) : 0.0;
+        double sad = result.get(avgSad) != null ? result.get(avgSad) : 0.0;
+        double sleepy = result.get(avgSleepy) != null ? result.get(avgSleepy) : 0.0;
+        double excellent = result.get(avgExcellent) != null ? result.get(avgExcellent) : 0.0;
+        double happy = result.get(avgHappy) != null ? result.get(avgHappy) : 0.0;
+
+        double sum = angry + sad + sleepy + excellent + happy;
+
+        if (sum == 0.0) {
+            return new MonthResponse.AverageFeeling(0, 0, 0, 0, 0);
+        }
+
         return new MonthResponse.AverageFeeling(
-                result.get(ds.angry.avg()),
-                result.get(ds.sad.avg()),
-                result.get(ds.sleepy.avg()),
-                result.get(ds.excellent.avg()),
-                result.get(ds.happy.avg())
+                (int) ((angry / sum) * 100),
+                (int) ((sad / sum) * 100),
+                (int) ((sleepy / sum) * 100),
+                (int) ((excellent / sum) * 100),
+                (int) ((happy / sum) * 100)
         );
     }
 
