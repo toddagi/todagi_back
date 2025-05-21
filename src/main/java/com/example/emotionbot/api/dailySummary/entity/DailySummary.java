@@ -26,7 +26,7 @@ public class DailySummary {
     @Column(name = "date", columnDefinition = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "summary", columnDefinition = "varchar(100)", nullable = true)
+    @Column(name = "summary", columnDefinition = "text", nullable = true)
     private String summary;
 
     @Column(name = "diary", columnDefinition = "text", nullable = true)
