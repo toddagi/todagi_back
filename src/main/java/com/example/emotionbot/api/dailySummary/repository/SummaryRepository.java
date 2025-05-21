@@ -13,7 +13,10 @@ import org.springframework.stereotype.Repository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -73,7 +76,7 @@ public class SummaryRepository {
         LocalDate startOfWeek = date.with(DayOfWeek.MONDAY);
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        List<DayResponse.WeeklyFeeling> weeklyFeelings=queryFactory
+        List<DayResponse.WeeklyFeeling> weeklyFeelings = queryFactory
                 .select(Projections.constructor(
                         DayResponse.WeeklyFeeling.class,
                         ds.date,
@@ -84,26 +87,21 @@ public class SummaryRepository {
                         ds.member.id.eq(memberId),
                         ds.date.between(startOfWeek, endOfWeek)
                 )
-                .orderBy(ds.date.asc())
                 .fetch();
 
-        if (weeklyFeelings.size()!=7){
-            //데이터베이스에 저장된 마지막 기록
-            DayResponse.WeeklyFeeling lastFeeling=weeklyFeelings.get(weeklyFeelings.size()-1);
+        Map<LocalDate, Feeling> feelingMap = weeklyFeelings.stream()
+                .collect(Collectors.toMap(DayResponse.WeeklyFeeling::date, DayResponse.WeeklyFeeling::feeling));
 
-            long dayBetween= ChronoUnit.DAYS.between(startOfWeek, lastFeeling.date());
-
-            for (int i=(int)dayBetween+1;i<7;i++){
-                LocalDate futureDay = startOfWeek.plusDays(i);
-                DayResponse.WeeklyFeeling tempFeeling=new DayResponse.WeeklyFeeling(futureDay, Feeling.UNKOWN);
-                weeklyFeelings.add(tempFeeling);
-            }
-
+        List<DayResponse.WeeklyFeeling> result = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            LocalDate day = startOfWeek.plusDays(i);
+            Feeling feeling = feelingMap.getOrDefault(day, Feeling.UNKOWN);
+            result.add(new DayResponse.WeeklyFeeling(day, feeling));
         }
 
-        return weeklyFeelings;
-
+        return result;
     }
+
 
 
     public DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date) {
