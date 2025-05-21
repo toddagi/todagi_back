@@ -11,6 +11,7 @@ import com.example.emotionbot.api.member.entity.Member;
 import com.example.emotionbot.api.member.repository.MemberRepository;
 import com.example.emotionbot.common.exception.EmotionBotException;
 import com.example.emotionbot.common.exception.FailMessage;
+import com.example.emotionbot.common.utils.DateFormatUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,6 +26,7 @@ public class DiaryService {
     private final DailySummaryRepository dailySummaryRepository;
     private final MemberRepository memberRepository;
     private final ChallengeService challengeService;
+    private final DateFormatUtil dateFormatutil;
 
     @Transactional
     public Long saveDiary(Long memberId, DiaryRequest diaryRequest) {
@@ -45,10 +47,13 @@ public class DiaryService {
     @Transactional
     @Cacheable(
             value = "diary",
-            key = "T(String).valueOf(#memberId).concat(':').concat(#year).concat('-').concat(#month)",
+            key = "T(String).valueOf(#memberId).concat(':').concat(#date)",
             unless = "#result == null or #result.isEmpty()"
     )
-    public List<DiaryResponse> getDailySummariesByMonth(int year, int month, Long memberId) {
+    public List<DiaryResponse> getDailySummariesByMonth(String date, Long memberId) {
+        int year=dateFormatutil.yearFormat(date);
+        int month=dateFormatutil.monthFormat(date);
+
         return dailySummaryRepository.findByMonth(year, month, memberId)
                 .stream()
                 .map(diary -> {
