@@ -6,6 +6,7 @@ import com.example.emotionbot.api.dailySummary.service.DiaryService;
 import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,9 @@ public class DiaryController {
 
     @Operation(summary = "요일 별 일기 조회", description = "월별로 일기를 조회합니다")
     @GetMapping
-    public ResponseEntity<APISuccessResponse<List<DiaryResponse>>> getDailySummariesByMonth(@MemberId Long memberId, @RequestParam String date) {
+    public ResponseEntity<APISuccessResponse<List<DiaryResponse>>> getDailySummariesByMonth(@MemberId Long memberId,
+                                                                                            @Parameter(description = "조회할 월 (예: 2025-05)", example = "2025-05")
+                                                                                            @RequestParam String date) {
         List<DiaryResponse> dailySummaries = diaryService.getDailySummariesByMonth(date, memberId);
         if (dailySummaries.isEmpty()) {
             return ResponseEntity.noContent().build();
