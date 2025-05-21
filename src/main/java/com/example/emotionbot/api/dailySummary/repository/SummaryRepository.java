@@ -103,11 +103,10 @@ public class SummaryRepository {
     }
 
 
-
     public DayResponse.EmotionScores getEmotionScores(Long memberId, LocalDate date) {
         QDailySummary ds = QDailySummary.dailySummary;
 
-        DayResponse.EmotionScores result = queryFactory
+        DayResponse.EmotionScores raw = queryFactory
                 .select(Projections.constructor(
                         DayResponse.EmotionScores.class,
                         ds.angry,
@@ -123,10 +122,27 @@ public class SummaryRepository {
                 )
                 .fetchOne();
 
-        return result != null
-                ? result
-                : new DayResponse.EmotionScores(0f, 0f, 0f, 0f, 0f);
-    }
-}
+        float angry = raw != null ? raw.angry() : 0f;
+        float sad = raw != null ? raw.sad() : 0f;
+        float sleepy = raw != null ? raw.sleepy() : 0f;
+        float excellent = raw != null ? raw.excellent() : 0f;
+        float happy = raw != null ? raw.happy() : 0f;
 
+        float sum = angry + sad + sleepy + excellent + happy;
+
+        if (sum == 0f) {
+            return new DayResponse.EmotionScores(0, 0, 0, 0, 0);
+        }
+
+        return new DayResponse.EmotionScores(
+                (int) ((angry / sum) * 100),
+                (int) ((sad / sum) * 100),
+                (int) ((sleepy / sum) * 100),
+                (int) ((excellent / sum) * 100),
+                (int) ((happy / sum) * 100)
+        );
+    }
+
+
+}
 
