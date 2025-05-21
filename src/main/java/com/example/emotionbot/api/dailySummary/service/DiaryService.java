@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,17 +51,34 @@ public class DiaryService {
     public List<DiaryResponse> getDailySummariesByMonth(int year, int month, Long memberId) {
         return dailySummaryRepository.findByMonth(year, month, memberId)
                 .stream()
-                .map(diary -> new DiaryResponse(
-                        Feeling.toValue(diary.getFeeling().toString()),
-                        diary.getDiary(),
-                        diary.getDate(),
-                        diary.getSummary(),
-                        diary.getAngry(),
-                        diary.getSad(),
-                        diary.getSleepy(),
-                        diary.getExcellent(),
-                        diary.getHappy()
-                ))
+                .map(diary -> {
+                    float angry = Optional.ofNullable(diary.getAngry()).orElse(0.0f);
+                    float sad = Optional.ofNullable(diary.getSad()).orElse(0.0f);
+                    float sleepy = Optional.ofNullable(diary.getSleepy()).orElse(0.0f);
+                    float excellent = Optional.ofNullable(diary.getExcellent()).orElse(0.0f);
+                    float happy = Optional.ofNullable(diary.getHappy()).orElse(0.0f);
+
+                    float total = angry + sad + sleepy + excellent + happy;
+
+                    int angryRatio = total == 0 ? 0 : Math.round((angry / total) * 100f);
+                    int sadRatio = total == 0 ? 0 : Math.round((sad / total) * 100f);
+                    int sleepyRatio = total == 0 ? 0 : Math.round((sleepy / total) * 100f);
+                    int excellentRatio = total == 0 ? 0 : Math.round((excellent / total) * 100f);
+                    int happyRatio = total == 0 ? 0 : Math.round((happy / total) * 100f);
+
+                    return new DiaryResponse(
+                            Feeling.toValue(diary.getFeeling().toString()),
+                            diary.getDiary(),
+                            diary.getDate(),
+                            diary.getSummary(),
+                            angryRatio,
+                            sadRatio,
+                            sleepyRatio,
+                            excellentRatio,
+                            happyRatio
+                    );
+                })
                 .toList();
+
     }
 }
