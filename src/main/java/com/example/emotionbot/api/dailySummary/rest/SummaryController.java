@@ -6,6 +6,7 @@ import com.example.emotionbot.api.dailySummary.service.SummaryService;
 import com.example.emotionbot.common.resolver.MemberId;
 import com.example.emotionbot.common.response.APISuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +22,17 @@ public class SummaryController {
 
     @Operation(summary = "달 별 통계 조회", description = "달 별로 통계를 조회합니다")
     @GetMapping("/month")
-    public ResponseEntity<APISuccessResponse<MonthResponse>> getMonthSummary(@MemberId Long memberId, @RequestParam String date) {
+    public ResponseEntity<APISuccessResponse<MonthResponse>> getMonthSummary(@MemberId Long memberId,
+                                                                             @Parameter(description = "조회할 월 (예: 2025-05)", example = "2025-05")
+                                                                             @RequestParam String date) {
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(summaryService.getMonthSummary(memberId, date)));
     }
 
     @Operation(summary = "일 별 통계 조회", description = "일 별로 통계를 조회합니다")
     @GetMapping("/day")
-    public ResponseEntity<APISuccessResponse<DayResponse>> getDaySummary(@MemberId Long memberId, @RequestParam String date) {
+    public ResponseEntity<APISuccessResponse<DayResponse>> getDaySummary(@MemberId Long memberId,
+                                                                         @Parameter(description = "조회할 일 (예: 2025-05-10)", example = "2025-05-10")
+                                                                         @RequestParam String date) {
         return ResponseEntity.ok(APISuccessResponse.ofSuccess(summaryService.getDaySummary(memberId, date)));
     }
 
