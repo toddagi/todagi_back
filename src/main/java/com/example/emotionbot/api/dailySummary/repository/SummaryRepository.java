@@ -87,6 +87,7 @@ public class SummaryRepository {
                         ds.date.year().eq(year),
                         ds.date.month().eq(month)
                 )
+                .orderBy(ds.date.asc())
                 .fetch();
     }
 
