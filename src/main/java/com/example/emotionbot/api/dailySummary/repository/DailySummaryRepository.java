@@ -2,9 +2,7 @@ package com.example.emotionbot.api.dailySummary.repository;
 
 import com.example.emotionbot.api.dailySummary.entity.DailySummary;
 import com.example.emotionbot.api.member.entity.Member;
-import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +17,6 @@ public interface DailySummaryRepository extends JpaRepository<DailySummary, Long
     List<DailySummary> findByMonth(int year, int month, Long memberId);
 
 
-    @Lock(LockModeType.OPTIMISTIC)
     @Query("""
                 SELECT 
                     (COUNT(ds) * 1.0) / :daysInMonth *100
