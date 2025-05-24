@@ -26,6 +26,7 @@ public class DailySummary {
     @Column(name = "date", columnDefinition = "date", nullable = false)
     private LocalDate date;
 
+    @Lob
     @Column(name = "summary", columnDefinition = "text", nullable = true)
     private String summary;
 
