@@ -1,8 +1,10 @@
 package com.example.emotionbot.config;
 
 
+import com.example.emotionbot.api.dailySummary.dto.res.DiaryResponse;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -21,6 +23,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @EnableCaching
 @Configuration
@@ -60,14 +64,24 @@ public class RedisConfig {
 
     @Bean
     public RedisCacheManager redisCacheManager(ObjectMapper redisObjectMapper) {
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
+        Map<String, RedisCacheConfiguration> cacheConfigMap = Map.of(
+                RedisCacheNames.DIARY.getCacheName(),
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                        .serializeValuesWith(
+                                RedisSerializationContext.SerializationPair.fromSerializer(
+                                        new GzipRedisSerializer<>(
+                                                redisObjectMapper,
+                                                new TypeReference<List<DiaryResponse>>() {}
+                                        )
+                                )
+                        )
+                        .entryTtl(Duration.ofDays(1))
+        );
 
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
-                .entryTtl(Duration.ofDays(1L));
-
-        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory())
-                .cacheDefaults(redisCacheConfiguration).build();
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory())
+                .withInitialCacheConfigurations(cacheConfigMap)
+                .build();
     }
 }
