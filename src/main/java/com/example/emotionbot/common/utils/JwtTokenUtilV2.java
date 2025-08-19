@@ -79,6 +79,10 @@ public class JwtTokenUtilV2 {
         }
     }
 
+    public String getPayload(String token) {
+        return verify(token).getSubject();
+    }
+
 
     public long getRefreshTokenExpirationMillis() {
         return refreshExpirationMillis;
