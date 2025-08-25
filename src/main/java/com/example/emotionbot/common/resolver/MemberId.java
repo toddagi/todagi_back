@@ -1,5 +1,6 @@
 package com.example.emotionbot.common.resolver;
 
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
